@@ -11,6 +11,7 @@ import com.palone.planahead.data.database.alert.properties.AlertTrigger
 import com.palone.planahead.data.database.alert.properties.AlertType
 import com.palone.planahead.data.database.alert.properties.TaskType
 import com.palone.planahead.data.database.task.Task
+import com.palone.planahead.data.database.task.properties.TaskPriority
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,6 +46,10 @@ class HomeScreenViewModel(private val taskRepository: TaskRepository) : ViewMode
         _uiState.update { _uiState.value.copy(mockAlertTriggers = alertTriggers) }
     }
 
+    fun updateMockTaskPriority(taskPriority: TaskPriority) {
+        _uiState.update { _uiState.value.copy(mockAlertTaskPriority = taskPriority) }
+    }
+
     fun createDatabaseEntry(
         description: String,
         alertTypes: List<AlertType>,
@@ -54,7 +59,13 @@ class HomeScreenViewModel(private val taskRepository: TaskRepository) : ViewMode
         viewModelScope.launch {
             _uiState.update { _uiState.value.copy(isLoading = true) }
             val today = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-            taskAndAlertBuilder.updateTask(Task(description = description, addedDate = today))
+            taskAndAlertBuilder.updateTask(
+                Task(
+                    description = description,
+                    addedDate = today,
+                    isCompleted = false
+                )
+            )
             alertTypes.forEach { alertType -> //TODO figure out better way to add lists to database
                 alertTriggers.forEach { alertTrigger ->
                     taskAndAlertBuilder.addAlert(

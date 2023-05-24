@@ -63,7 +63,7 @@ fun TaskItemPreview() {
         task = Task(
             1, "task description wew such long one", LocalDateTime.now().format(
                 DateTimeFormatter.ISO_LOCAL_DATE_TIME
-            )
+            ), isCompleted = false
         ), alerts = listOf(
             Alert(1, 1, AlertType.PERSISTENT_NOTIFICATION, AlertTrigger.TIME, "json data here"),
             Alert(1, 1, AlertType.NOTIFICATION, AlertTrigger.TIME, "json data here"),

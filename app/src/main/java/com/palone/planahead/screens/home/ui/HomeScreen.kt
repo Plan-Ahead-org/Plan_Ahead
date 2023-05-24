@@ -21,10 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.palone.planahead.data.database.alert.properties.AlertTrigger
 import com.palone.planahead.data.database.alert.properties.TaskType
+import com.palone.planahead.data.database.task.properties.TaskPriority
 import com.palone.planahead.screens.home.HomeScreenViewModel
 import com.palone.planahead.screens.home.ui.components.AddTaskDescription
 import com.palone.planahead.screens.home.ui.components.ChooseAlertType
 import com.palone.planahead.screens.home.ui.components.ChooseOneTimeEventDate
+import com.palone.planahead.screens.home.ui.components.ChooseTaskPriority
 import com.palone.planahead.screens.home.ui.components.ChooseTaskType
 import com.palone.planahead.screens.home.ui.components.FabAddTask
 import com.palone.planahead.screens.home.ui.components.TaskItem
@@ -50,6 +52,9 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                 AddTaskDescription(
                     value = uiState.mockTaskDescription,
                     onValueChange = { viewModel.updateMockTaskDescription(it) })
+                ChooseTaskPriority(
+                    selectedPriority = TaskPriority.INFORMATIONAL,
+                    onValueChange = { taskPriority -> viewModel.updateMockTaskPriority(taskPriority) })
                 ChooseAlertType(modifier = Modifier.fillMaxWidth(),
                     checkedAlertTypes = uiState.mockAlertTypes,
                     onValueChange = { viewModel.updateMockTaskAlertTypes(it) })
@@ -58,6 +63,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                     onValueChange = { viewModel.updateMockTaskType(it) })
                 if (uiState.mockAlertTaskType == TaskType.ONE_TIME)
                     ChooseOneTimeEventDate(onValueChange = { viewModel.updateMockTaskData(it) })
+
                 Button(onClick = {
                     println(uiState)
                     viewModel.createDatabaseEntry(

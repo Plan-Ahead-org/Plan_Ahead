@@ -8,7 +8,7 @@ import com.palone.planahead.data.database.task.Task
 
 class TaskAndAlertBuilder(private val repository: TaskRepository) {
     //TODO make an Interface of this class
-    private var _task = Task(task_id = null, description = "", addedDate = "")
+    private var _task = Task(task_id = null, description = "", addedDate = "", isCompleted = false)
     private var _alerts: MutableList<Alert> = mutableListOf()
 
     fun updateTask(task: Task): Task {
@@ -17,7 +17,7 @@ class TaskAndAlertBuilder(private val repository: TaskRepository) {
     }
 
     fun setDefaultTask(): Task {
-        _task = Task(task_id = null, description = "", addedDate = "")
+        _task = Task(task_id = null, description = "", addedDate = "", isCompleted = false)
         return _task
     }
 
