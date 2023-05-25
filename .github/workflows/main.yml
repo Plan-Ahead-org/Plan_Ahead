@@ -1,3 +1,5 @@
+# Taken from https://github.com/amirisback/automated-build-android-app-with-github-action
+# License: Apache License Version 2.0, January 2004
 name: Android CI
 
 env:
