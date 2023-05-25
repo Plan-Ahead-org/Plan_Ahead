@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
-import com.palone.planahead.data.database.TaskDatabase
+import com.palone.planahead.data.database.TaskAndAlertDatabase
 import com.palone.planahead.data.database.TaskRepository
 import com.palone.planahead.screens.home.HomeScreenViewModel
 import com.palone.planahead.ui.theme.PlanAheadTheme
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
     private val db by lazy {
         Room.databaseBuilder(
             applicationContext,
-            TaskDatabase::class.java,
+            TaskAndAlertDatabase::class.java,
             "tasks.db"
         ).build()
     }
