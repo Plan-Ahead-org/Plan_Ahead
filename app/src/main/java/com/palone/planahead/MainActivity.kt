@@ -15,7 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
-import com.palone.planahead.data.database.TaskAndAlertDatabase
+import com.palone.planahead.data.database.AlertRepository
+import com.palone.planahead.data.database.PlanAheadDatabase
 import com.palone.planahead.data.database.TaskRepository
 import com.palone.planahead.screens.home.HomeScreenViewModel
 import com.palone.planahead.services.alarms.AlarmsHandler
@@ -25,25 +26,26 @@ class MainActivity : ComponentActivity() {
     private val db by lazy {
         Room.databaseBuilder(
             applicationContext,
-            TaskAndAlertDatabase::class.java,
+            PlanAheadDatabase::class.java,
             "tasks.db"
         ).build()
     }
-    private val taskRepository by lazy { TaskRepository(db.dao) }
-    val alarmManager: AlarmManager by lazy { getSystemService(Context.ALARM_SERVICE) as AlarmManager }
-    val alarmsHandler by lazy { AlarmsHandler(applicationContext, alarmManager) }
+    private val taskRepository by lazy { TaskRepository(db.taskDao) }
+    private val alertRepository by lazy { AlertRepository(db.alertDao) }
+    private val alarmManager: AlarmManager by lazy { getSystemService(Context.ALARM_SERVICE) as AlarmManager }
+    private val alarmsHandler by lazy { AlarmsHandler(applicationContext, alarmManager) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val homeScreenViewModel by viewModels<HomeScreenViewModel>(factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return HomeScreenViewModel(taskRepository) as T
+                    return HomeScreenViewModel(taskRepository, alertRepository) as T
                 }
             }
         })
 
         setContent {
-            val t = taskRepository.allTasks.collectAsState(initial = emptyMap())
+            val t = taskRepository.allTasksWithAlerts.collectAsState(initial = emptyList())
             LaunchedEffect(t.value.isNotEmpty()) {
                 alarmsHandler.inflateTasks(t.value)
                 alarmsHandler.createAlarmEntries()

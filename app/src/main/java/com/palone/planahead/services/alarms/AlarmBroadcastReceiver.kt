@@ -19,7 +19,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         val task = intent?.getParcelableExtra<Task>("task")
         setAlarms(context, alert, task)
         if (alert != null) {
-            if (alert.alert_type_name == AlertType.ALARM)
+            if (alert.alertTypeName == AlertType.ALARM)
                 showScreenUi(context, alert, task)
         }
     }
@@ -54,8 +54,8 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
 
         if (alert != null) {
             notificationManager.notify(
-                alert.alert_id!!,
-                if (alert.alert_type_name == AlertType.PERSISTENT_NOTIFICATION)
+                alert.alertId!!,
+                if (alert.alertTypeName == AlertType.PERSISTENT_NOTIFICATION)
                     persistentNotification
                 else singleNotification
             )

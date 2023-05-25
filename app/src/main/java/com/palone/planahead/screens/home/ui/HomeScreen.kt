@@ -24,11 +24,11 @@ import com.palone.planahead.data.database.alert.properties.TaskType
 import com.palone.planahead.data.database.task.properties.TaskPriority
 import com.palone.planahead.screens.home.HomeScreenViewModel
 import com.palone.planahead.screens.home.ui.components.AddTaskDescription
-import com.palone.planahead.screens.home.ui.components.ChooseAlertType
+import com.palone.planahead.screens.home.ui.components.ChooseAlertType.ChooseAlertType
 import com.palone.planahead.screens.home.ui.components.ChooseOneTimeEventDate
 import com.palone.planahead.screens.home.ui.components.ChooseTaskPriority
-import com.palone.planahead.screens.home.ui.components.ChooseTaskType
-import com.palone.planahead.screens.home.ui.components.FabAddTask
+import com.palone.planahead.screens.home.ui.components.ChooseTaskType.ChooseTaskType
+import com.palone.planahead.screens.home.ui.components.FloatingActionButtonAddTask
 import com.palone.planahead.screens.home.ui.components.TaskItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +37,8 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
     val uiState = viewModel.uiState.collectAsState().value
     val sheetState = rememberModalBottomSheetState()
     val uiScope = rememberCoroutineScope()
-    val tasks = viewModel.allTasks.collectAsState(initial = emptyMap())
+    val tasks =
+        viewModel.uiState.collectAsState().value.allTasks.collectAsState(initial = listOf()) // not sure about this one (it looks awful)
     if (viewModel.uiState.collectAsState().value.shouldShowDrawer)
         ModalBottomSheet(
             sheetState = sheetState,
@@ -53,7 +54,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                     value = uiState.mockTaskDescription,
                     onValueChange = { viewModel.updateMockTaskDescription(it) })
                 ChooseTaskPriority(
-                    selectedPriority = TaskPriority.INFORMATIONAL,
+                    selectedPriority = TaskPriority.LOW,
                     onValueChange = { taskPriority -> viewModel.updateMockTaskPriority(taskPriority) })
                 ChooseAlertType(modifier = Modifier.fillMaxWidth(),
                     checkedAlertTypes = uiState.mockAlertTypes,
@@ -64,7 +65,6 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                 if (uiState.mockAlertTaskType == TaskType.ONE_TIME)
                     ChooseOneTimeEventDate(onValueChange = { viewModel.updateMockTaskData(it) })
                 Button(onClick = {
-                    println(uiState)
                     viewModel.createDatabaseEntry(
                         uiState.mockTaskDescription,
                         uiState.mockAlertTypes,
@@ -78,7 +78,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
         }
 
     Scaffold(floatingActionButton = {
-        FabAddTask(onClick = {
+        FloatingActionButtonAddTask(onClick = {
             viewModel.showBottomSheet(sheetState, uiScope)
         })
 
@@ -95,5 +95,4 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
             }
         }
     }
-
 }

@@ -22,26 +22,25 @@ fun ChooseTaskPriority(
         modifier = modifier.fillMaxWidth(0.7f),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Priority: " + sliderPosition.value.toTaskPriority().name) //TODO take this to string res
+        Text(text = "Priority: " + mapRangeToPriority(sliderPosition.value).name) //TODO take this to string res
         Slider(
-            steps = 3,
+            steps = 1,
             value = sliderPosition.value,
             onValueChange = { sliderPosition.value = it },
-            valueRange = 0.0f..50.0f,
+            valueRange = 0.0f..30.0f,
             onValueChangeFinished = {
-                onValueChange(sliderPosition.value.toTaskPriority())
+                onValueChange(mapRangeToPriority(sliderPosition.value))
             }
         )
     }
 
 }
 
-private fun Float.toTaskPriority(): TaskPriority {
-    return when (this) {
-        in 10.1f..20f -> TaskPriority.LOW
-        in 20.1f..30f -> TaskPriority.MEDIUM
-        in 30.1f..40f -> TaskPriority.HIGH
-        in 40.1f..50f -> TaskPriority.CRITICAL
-        else -> TaskPriority.INFORMATIONAL
+private fun mapRangeToPriority(value: Float): TaskPriority {
+    return when (value) {
+        0f -> TaskPriority.LOW
+        15f -> TaskPriority.MEDIUM
+        30f -> TaskPriority.HIGH
+        else -> TaskPriority.LOW
     }
 }
