@@ -45,7 +45,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.4f),
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -63,7 +63,6 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                     onValueChange = { viewModel.updateMockTaskType(it) })
                 if (uiState.mockAlertTaskType == TaskType.ONE_TIME)
                     ChooseOneTimeEventDate(onValueChange = { viewModel.updateMockTaskData(it) })
-
                 Button(onClick = {
                     println(uiState)
                     viewModel.createDatabaseEntry(

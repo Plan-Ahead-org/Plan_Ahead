@@ -8,9 +8,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -18,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,13 +59,14 @@ fun ChooseOneTimeEventDate(modifier: Modifier = Modifier, onValueChange: (String
             confirmButton = {
                 Button(
                     onClick = {
-                        onValueChange("${datePickerState.selectedDateMillis}/${timePickerState.hour}:${timePickerState.minute}")
+                        onValueChange(returnOnValueChange(datePickerState, timePickerState))
                         shouldShowDatePicker.value = false
                     }) {
                     Text(text = "Ok")
                 }
             }) {
             DatePicker(state = datePickerState)
+
         }
     if (shouldShowTimePicker.value)
         DatePickerDialog(
@@ -70,7 +74,7 @@ fun ChooseOneTimeEventDate(modifier: Modifier = Modifier, onValueChange: (String
             confirmButton = {
                 Button(
                     onClick = {
-                        onValueChange("${datePickerState.selectedDateMillis}/${timePickerState.hour}:${timePickerState.minute}")
+                        onValueChange(returnOnValueChange(datePickerState, timePickerState))
                         shouldShowTimePicker.value = false
                     }) {
                     Text(text = "Ok")
@@ -79,4 +83,19 @@ fun ChooseOneTimeEventDate(modifier: Modifier = Modifier, onValueChange: (String
             TimePicker(modifier = Modifier.fillMaxWidth(), state = timePickerState)
         }
 }
+
 //TODO make preview
+@OptIn(ExperimentalMaterial3Api::class)
+fun returnOnValueChange(
+    datePickerState: DatePickerState,
+    timePickerState: TimePickerState
+): String {
+    val date = datePickerState.selectedDateMillis?.minus(
+        TimeZone.getDefault().getOffset(
+            datePickerState.selectedDateMillis!!
+        )
+    )
+    val timeFromTimePicker =
+        (timePickerState.hour * 3600000).plus(timePickerState.minute * 60000)
+    return ((date ?: 0) + timeFromTimePicker).toString()
+}
