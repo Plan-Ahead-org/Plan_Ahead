@@ -21,7 +21,9 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class HomeScreenViewModel(private val taskRepository: TaskRepository) : ViewModel() {
+class HomeScreenViewModel(
+    private val taskRepository: TaskRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeScreenUIState())
     val uiState: StateFlow<HomeScreenUIState> = _uiState.asStateFlow() // TODO kiedyś się przyda
     val allTasks = taskRepository.allTasks
@@ -59,6 +61,7 @@ class HomeScreenViewModel(private val taskRepository: TaskRepository) : ViewMode
         viewModelScope.launch {
             _uiState.update { _uiState.value.copy(isLoading = true) }
             val today = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            taskAndAlertBuilder.setDefaultTask()
             taskAndAlertBuilder.updateTask(
                 Task(
                     description = description,
@@ -98,6 +101,5 @@ class HomeScreenViewModel(private val taskRepository: TaskRepository) : ViewMode
 
 
     init {
-
     }
 }
