@@ -20,10 +20,13 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Alert(
     @PrimaryKey(autoGenerate = true)
-    val alertId: Int? = null,
+
+  val alertId: Int? = null,
     val taskId: Int? = null,
     val alertTypeName: AlertType,
     val alertTriggerName: AlertTrigger,
     val eventMillisInEpoch: Long?,
     val interval: Long?
+
+    
 ) : Parcelable
