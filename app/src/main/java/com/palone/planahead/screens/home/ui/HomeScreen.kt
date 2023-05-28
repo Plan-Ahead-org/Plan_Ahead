@@ -20,16 +20,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.palone.planahead.data.database.alert.properties.AlertTrigger
-import com.palone.planahead.data.database.alert.properties.TaskType
 import com.palone.planahead.data.database.task.properties.TaskPriority
+import com.palone.planahead.data.database.task.properties.TaskType
 import com.palone.planahead.screens.home.HomeScreenViewModel
 import com.palone.planahead.screens.home.ui.components.AddTaskDescription
-import com.palone.planahead.screens.home.ui.components.ChooseAlertType.ChooseAlertType
 import com.palone.planahead.screens.home.ui.components.ChooseOneTimeEventDate
 import com.palone.planahead.screens.home.ui.components.ChooseTaskPriority
-import com.palone.planahead.screens.home.ui.components.ChooseTaskType.ChooseTaskType
 import com.palone.planahead.screens.home.ui.components.FloatingActionButtonAddTask
 import com.palone.planahead.screens.home.ui.components.TaskItem
+import com.palone.planahead.screens.home.ui.components.chooseAlertTypes.ChooseAlertType
+import com.palone.planahead.screens.home.ui.components.chooseChoreTimes.ChooseChoreTime
+import com.palone.planahead.screens.home.ui.components.segmentedButton.SegmentedRadioButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +39,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
     val sheetState = rememberModalBottomSheetState()
     val uiScope = rememberCoroutineScope()
     val tasks =
-        viewModel.uiState.collectAsState().value.allTasks.collectAsState(initial = listOf()) // not sure about this one (it looks awful)
+        viewModel.uiState.collectAsState().value.allTasks.collectAsState(initial = listOf())
     if (viewModel.uiState.collectAsState().value.shouldShowDrawer)
         ModalBottomSheet(
             sheetState = sheetState,
@@ -51,25 +52,46 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AddTaskDescription(
-                    value = uiState.mockTaskDescription,
+                    value = uiState.mockTaskProperties.baseTask.description,
                     onValueChange = { viewModel.updateMockTaskDescription(it) })
                 ChooseTaskPriority(
                     selectedPriority = TaskPriority.LOW,
                     onValueChange = { taskPriority -> viewModel.updateMockTaskPriority(taskPriority) })
                 ChooseAlertType(modifier = Modifier.fillMaxWidth(),
-                    checkedAlertTypes = uiState.mockAlertTypes,
-                    onValueChange = { viewModel.updateMockTaskAlertTypes(it) })
-                ChooseTaskType(
-                    selectedTaskType = uiState.mockAlertTaskType,
-                    onValueChange = { viewModel.updateMockTaskType(it) })
-                if (uiState.mockAlertTaskType == TaskType.ONE_TIME)
-                    ChooseOneTimeEventDate(onValueChange = { viewModel.updateMockTaskData(it) })
+                    checkedAlertTypes = uiState.mockTaskProperties.alertTypes,
+                    onValueChange = { viewModel.updateMockAlertTypes(it) })
+                SegmentedRadioButton(
+                    fields = TaskType.values().asList(),
+                    selectedField = uiState.mockTaskProperties.baseTask.taskType,
+                    onValueChange = { viewModel.updateMockTaskType(it as TaskType) }
+                )
+                when (uiState.mockTaskProperties.baseTask.taskType) {
+                    TaskType.ONE_TIME -> {
+                        ChooseOneTimeEventDate(onValueChange = {
+                            viewModel.updateMockTaskEventMillisInEpoch(
+                                it
+                            )
+                        })
+                    }
+
+                    TaskType.CHORE -> {
+                        ChooseChoreTime(onValueChange = { millisInEpoch, interval ->
+                            viewModel.updateMockTaskEventMillisInEpoch(millisInEpoch)
+                            viewModel.updateMockTaskInterval(interval)
+                        })
+                    }
+
+                    TaskType.CRON -> {/* TODO */
+                    }
+                }
                 Button(onClick = {
                     viewModel.createDatabaseEntry(
-                        uiState.mockTaskDescription,
-                        uiState.mockAlertTypes,
+                        uiState.mockTaskProperties.baseTask.description,
+                        uiState.mockTaskProperties.baseTask.taskType,
+                        uiState.mockTaskProperties.alertTypes,
                         listOf(AlertTrigger.TIME),
-                        uiState.mockAlertTaskData
+                        uiState.mockTaskProperties.alertEventMillisInEpoch,
+                        uiState.mockTaskProperties.alertInterval
                     )
                 }) {
                     Text(text = "Add") // TODO add this to string res

@@ -1,4 +1,4 @@
-package com.palone.planahead.screens.home.ui.components.ChooseAlertType
+package com.palone.planahead.screens.home.ui.components.chooseAlertTypes
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.palone.planahead.data.database.alert.properties.AlertType
+import com.palone.planahead.toggle
 
 @Composable
 fun ChooseAlertType(
@@ -22,20 +23,20 @@ fun ChooseAlertType(
     ) {
         AlertTypeCheckbox(
             modifier = Modifier.weight(0.3f),
-            checkedAlertTypes = checkedAlertTypes,
-            onValueChange = onValueChange,
+            isChecked = checkedAlertTypes.contains(AlertType.ALARM),
+            onValueChange = { onValueChange(checkedAlertTypes.toggle(AlertType.ALARM)) },
             alertType = AlertType.ALARM
         )
         AlertTypeCheckbox(
             modifier = Modifier.weight(0.3f),
-            checkedAlertTypes = checkedAlertTypes,
-            onValueChange = onValueChange,
+            isChecked = checkedAlertTypes.contains(AlertType.NOTIFICATION),
+            onValueChange = { onValueChange(checkedAlertTypes.toggle(AlertType.NOTIFICATION)) },
             alertType = AlertType.NOTIFICATION
         )
         AlertTypeCheckbox(
             modifier = Modifier.weight(0.3f),
-            checkedAlertTypes = checkedAlertTypes,
-            onValueChange = onValueChange,
+            isChecked = checkedAlertTypes.contains(AlertType.PERSISTENT_NOTIFICATION),
+            onValueChange = { onValueChange(checkedAlertTypes.toggle(AlertType.PERSISTENT_NOTIFICATION)) },
             alertType = AlertType.PERSISTENT_NOTIFICATION
         )
 

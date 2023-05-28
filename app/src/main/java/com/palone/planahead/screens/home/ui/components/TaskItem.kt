@@ -22,6 +22,7 @@ import com.palone.planahead.data.database.alert.Alert
 import com.palone.planahead.data.database.alert.properties.AlertTrigger
 import com.palone.planahead.data.database.alert.properties.AlertType
 import com.palone.planahead.data.database.task.Task
+import com.palone.planahead.data.database.task.properties.TaskType
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -61,13 +62,13 @@ fun TaskItem(modifier: Modifier = Modifier, task: Task, alerts: List<Alert>) {
 fun TaskItemPreview() {
     TaskItem(
         task = Task(
-            1, "task description wew such long one", LocalDateTime.now().format(
+            1, TaskType.ONE_TIME, "task description wew such long one", LocalDateTime.now().format(
                 DateTimeFormatter.ISO_LOCAL_DATE_TIME
             ), isCompleted = false
         ), alerts = listOf(
-            Alert(1, 1, AlertType.PERSISTENT_NOTIFICATION, AlertTrigger.TIME, "json data here"),
-            Alert(1, 1, AlertType.NOTIFICATION, AlertTrigger.TIME, "json data here"),
-            Alert(1, 1, AlertType.ALARM, AlertTrigger.LOCATION, "json data here")
+            Alert(1, 1, AlertType.PERSISTENT_NOTIFICATION, AlertTrigger.TIME, 1684973640000, null),
+            Alert(1, 1, AlertType.NOTIFICATION, AlertTrigger.TIME, 1684973640000, null),
+            Alert(1, 1, AlertType.ALARM, AlertTrigger.LOCATION, 1684973640000, null)
         )
     )
 }

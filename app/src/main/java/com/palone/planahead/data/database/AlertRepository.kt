@@ -6,7 +6,6 @@ class AlertRepository(private val alertDao: AlertDao) {
     suspend fun upsert(alert: Alert) {
         alertDao.upsert(alert)
     }
-
     suspend fun delete(alert: Alert) {
         alertDao.delete(alert)
     }

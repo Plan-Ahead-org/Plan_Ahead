@@ -1,4 +1,4 @@
-package com.palone.planahead.screens.home.ui.components.ChooseAlertType
+package com.palone.planahead.screens.home.ui.components.chooseAlertTypes
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,14 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import com.palone.planahead.data.database.alert.properties.AlertType
-import com.palone.planahead.toggle
 
 @Composable
 fun AlertTypeCheckbox(
     modifier: Modifier = Modifier,
     alertType: AlertType,
-    checkedAlertTypes: List<AlertType>,
-    onValueChange: (List<AlertType>) -> Unit
+    isChecked: Boolean,
+    onValueChange: (AlertType) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -29,7 +28,7 @@ fun AlertTypeCheckbox(
             overflow = TextOverflow.Ellipsis
         )
         Checkbox(
-            checked = checkedAlertTypes.contains(alertType),
-            onCheckedChange = { onValueChange(checkedAlertTypes.toggle(alertType)) })
+            checked = isChecked,
+            onCheckedChange = { onValueChange(alertType) })
     }
 }

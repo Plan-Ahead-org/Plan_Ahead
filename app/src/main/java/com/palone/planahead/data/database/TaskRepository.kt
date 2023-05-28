@@ -8,7 +8,6 @@ class TaskRepository(private val taskDao: TaskDao) {
     suspend fun upsert(task: Task): Long {
         return taskDao.upsert(task)
     }
-
     suspend fun delete(task: Task) {
         taskDao.delete(task)
     }

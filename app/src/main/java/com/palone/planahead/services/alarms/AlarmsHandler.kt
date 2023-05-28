@@ -9,6 +9,7 @@ import android.util.Log
 import com.palone.planahead.data.database.TaskWithAlerts
 import com.palone.planahead.data.database.alert.Alert
 import com.palone.planahead.data.database.task.Task
+import com.palone.planahead.data.database.task.properties.TaskType
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 
@@ -22,7 +23,7 @@ class AlarmsHandler(
             alerts.forEach { alert: Alert ->
                 val currentTimeInMilliEpoch =
                     LocalDateTime.now().toEpochSecond(OffsetDateTime.now().offset) * 1000
-                if ((alert.alertTriggerData ?: "0").toLong() > currentTimeInMilliEpoch) {
+                if ((alert.eventMillisInEpoch ?: 0) > currentTimeInMilliEpoch) {
                     addAlarm(alert, task)
                 }
             }
@@ -40,11 +41,35 @@ class AlarmsHandler(
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            alert.alertTriggerData?.toLong() ?: 0,
-            pendingIntent
-        )
-        Log.i("Added :)", alert.toString())
+        Log.i("New alarm found :)", alert.toString() + task.toString())
+        when (task.taskType) {
+            TaskType.ONE_TIME -> setOneTimeAlarm(alarmManager, alert, pendingIntent)
+            TaskType.CHORE -> setChoreAlarm(alarmManager, alert, pendingIntent)
+            TaskType.CRON -> setCronAlarm(alarmManager, alert, pendingIntent)
+        }
     }
+}
+
+@SuppressLint("MissingPermission") // permissions are granted anyway
+fun setOneTimeAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP,
+        alert.eventMillisInEpoch ?: 0,
+        pendingIntent
+    )
+}
+
+@SuppressLint("MissingPermission") // permissions are granted anyway
+fun setChoreAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
+    alarmManager.setRepeating(
+        AlarmManager.RTC_WAKEUP,
+        alert.eventMillisInEpoch ?: 0,
+        alert.interval ?: 0,
+        pendingIntent
+    )
+}
+
+@SuppressLint("MissingPermission") // permissions are granted anyway
+fun setCronAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
+    // TODO impl later
 }

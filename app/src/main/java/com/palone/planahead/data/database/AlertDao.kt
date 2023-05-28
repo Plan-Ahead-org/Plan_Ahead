@@ -7,10 +7,8 @@ import com.palone.planahead.data.database.alert.Alert
 
 @Dao
 interface AlertDao {
-
     @Upsert
     suspend fun upsert(alert: Alert): Long
-
     @Delete
     suspend fun delete(alert: Alert)
 }

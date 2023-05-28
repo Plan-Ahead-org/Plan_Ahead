@@ -24,7 +24,7 @@ import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChooseOneTimeEventDate(modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
+fun ChooseOneTimeEventDate(modifier: Modifier = Modifier, onValueChange: (Long) -> Unit) {
     val datePickerState = rememberDatePickerState()
     val timePickerState = rememberTimePickerState()
     val shouldShowDatePicker = remember {
@@ -34,9 +34,10 @@ fun ChooseOneTimeEventDate(modifier: Modifier = Modifier, onValueChange: (String
         mutableStateOf(false)
     }
     Column(modifier = modifier) {
-        Card(modifier = Modifier
-            .clickable { shouldShowDatePicker.value = true }
-            .padding(5.dp)) {
+        Card(
+            modifier = Modifier
+                .clickable { shouldShowDatePicker.value = true }
+                .padding(5.dp)) {
             Text(
                 modifier = Modifier.padding(10.dp),
                 text = "Selected date: ${datePickerState.selectedDateMillis}" //TODO add this to string res
@@ -89,7 +90,7 @@ fun ChooseOneTimeEventDate(modifier: Modifier = Modifier, onValueChange: (String
 fun returnOnValueChange(
     datePickerState: DatePickerState,
     timePickerState: TimePickerState
-): String {
+): Long {
     val date = datePickerState.selectedDateMillis?.minus(
         TimeZone.getDefault().getOffset(
             datePickerState.selectedDateMillis!!
@@ -97,5 +98,5 @@ fun returnOnValueChange(
     )
     val timeFromTimePicker =
         (timePickerState.hour * 3600000).plus(timePickerState.minute * 60000)
-    return ((date ?: 0) + timeFromTimePicker).toString()
+    return ((date ?: 0) + timeFromTimePicker)
 }
