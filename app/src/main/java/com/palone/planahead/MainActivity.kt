@@ -46,9 +46,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val t = taskRepository.allTasksWithAlerts.collectAsState(initial = emptyList())
-            LaunchedEffect(t.value.isNotEmpty()) {
-                alarmsHandler.inflateTasks(t.value)
-                alarmsHandler.createAlarmEntries()
+            LaunchedEffect(t.value) {
+                if (t.value.isNotEmpty())
+                    alarmsHandler.createAlarmEntries(t.value)
             }
             PlanAheadTheme {
                 // A surface container using the 'background' color from the theme
