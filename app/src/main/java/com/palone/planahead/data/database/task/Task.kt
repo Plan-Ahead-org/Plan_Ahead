@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Task(
     @PrimaryKey(autoGenerate = true)
-    val task_id: Int? = null,
+    val taskId: Int? = null,
     val description: String,
     val addedDate: String,
     val isCompleted: Boolean,

@@ -12,17 +12,17 @@ import kotlinx.parcelize.Parcelize
 @Entity(
     foreignKeys = [ForeignKey(
         entity = Task::class,
-        parentColumns = arrayOf("task_id"),
-        childColumns = arrayOf("task_id"),
+        parentColumns = arrayOf("taskId"),
+        childColumns = arrayOf("taskId"),
         onDelete = ForeignKey.SET_NULL
     )]
 )
 @Parcelize
 data class Alert(
     @PrimaryKey(autoGenerate = true)
-    val alert_id: Int? = null,
-    val task_id: Int? = null,
-    val alert_type_name: AlertType,
-    val alert_trigger_name: AlertTrigger,
-    val alert_trigger_data: String? = null
+    val alertId: Int? = null,
+    val taskId: Int? = null,
+    val alertTypeName: AlertType,
+    val alertTriggerName: AlertTrigger,
+    val alertTriggerData: String? = null
 ) : Parcelable

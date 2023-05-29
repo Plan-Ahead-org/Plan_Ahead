@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.palone.planahead.data.HomeScreenUIState
 import com.palone.planahead.data.TaskAndAlertBuilder
+import com.palone.planahead.data.database.AlertRepository
 import com.palone.planahead.data.database.TaskRepository
 import com.palone.planahead.data.database.alert.properties.AlertTrigger
 import com.palone.planahead.data.database.alert.properties.AlertType
@@ -22,12 +23,13 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class HomeScreenViewModel(
-    private val taskRepository: TaskRepository
+    taskRepository: TaskRepository,
+    alertRepository: AlertRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(HomeScreenUIState())
+    private val _uiState =
+        MutableStateFlow(HomeScreenUIState(allTasks = taskRepository.allTasksWithAlerts))
     val uiState: StateFlow<HomeScreenUIState> = _uiState.asStateFlow() // TODO kiedyś się przyda
-    val allTasks = taskRepository.allTasks
-    private val taskAndAlertBuilder = TaskAndAlertBuilder(taskRepository)
+    private val taskAndAlertBuilder = TaskAndAlertBuilder(taskRepository, alertRepository)
     fun updateMockTaskDescription(description: String) {
         _uiState.update { _uiState.value.copy(mockTaskDescription = description) }
     }
@@ -78,7 +80,7 @@ class HomeScreenViewModel(
                     )
                 }
             }
-            taskAndAlertBuilder.sendToDataBase()
+            taskAndAlertBuilder.sendToDatabase()
             taskAndAlertBuilder.setDefaultTask()
             _uiState.update { _uiState.value.copy(isLoading = false) }
         }
@@ -100,6 +102,5 @@ class HomeScreenViewModel(
     }
 
 
-    init {
-    }
+    init {}
 }

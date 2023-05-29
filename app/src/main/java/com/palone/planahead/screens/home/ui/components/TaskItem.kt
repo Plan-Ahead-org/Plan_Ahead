@@ -31,8 +31,8 @@ fun TaskItem(modifier: Modifier = Modifier, task: Task, alerts: List<Alert>) {
     val alertTriggers = remember { mutableStateListOf<AlertTrigger>() }
     SideEffect {
         alerts.forEach { alert ->
-            if (!alertTriggers.contains(alert.alert_trigger_name)) alertTriggers.add(alert.alert_trigger_name)
-            if (!alertTypes.contains(alert.alert_type_name)) alertTypes.add(alert.alert_type_name)
+            if (!alertTriggers.contains(alert.alertTriggerName)) alertTriggers.add(alert.alertTriggerName)
+            if (!alertTypes.contains(alert.alertTypeName)) alertTypes.add(alert.alertTypeName)
         }
     }
 

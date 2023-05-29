@@ -19,7 +19,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         val task = intent?.getParcelableExtra<Task>("task")
         setAlarms(context, alert, task)
         if (alert != null) {
-            if (alert.alert_type_name == AlertType.ALARM)
+            if (alert.alertTypeName == AlertType.ALARM)
                 showScreenUi(context, alert, task)
         }
     }
@@ -42,22 +42,17 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
             context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
 
-        val singleNotification = NotificationCompat.Builder(context, channelId)
+        val notification = NotificationCompat.Builder(context, channelId)
             .setContentTitle(task?.description)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentText("Nie zrobiłeś jeszcze tej rzeczy!").build()
-        val persistentNotification = NotificationCompat.Builder(context, channelId)
-            .setContentTitle(task?.description)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setOngoing(true)
-            .setContentText("Nie zrobiłeś jeszcze tej rzeczy!").build()
+            .setContentText("Nie zrobiłeś jeszcze tej rzeczy!")
 
         if (alert != null) {
+            if (alert.alertTypeName == AlertType.PERSISTENT_NOTIFICATION)
+                notification.setOngoing(true)
             notificationManager.notify(
-                alert.alert_id!!,
-                if (alert.alert_type_name == AlertType.PERSISTENT_NOTIFICATION)
-                    persistentNotification
-                else singleNotification
+                alert.alertId!!,
+                notification.build()
             )
         }
     }

@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun FabAddTask(onClick: () -> Unit) {
+fun FloatingActionButtonAddTask(onClick: () -> Unit) {
     ExtendedFloatingActionButton(
         text = { Text(text = "Add task") },
         icon = {
@@ -25,5 +25,5 @@ fun FabAddTask(onClick: () -> Unit) {
 @Preview
 @Composable
 fun Preview() {
-    FabAddTask {}
+    FloatingActionButtonAddTask {}
 }
