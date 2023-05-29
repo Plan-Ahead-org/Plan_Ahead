@@ -30,10 +30,13 @@ class MainActivity : ComponentActivity() {
             "tasks.db"
         ).build()
     }
-    private val taskRepository by lazy { TaskRepository(db.taskDao) }
+
+  private val taskRepository by lazy { TaskRepository(db.taskDao) }
     private val alertRepository by lazy { AlertRepository(db.alertDao) }
     private val alarmManager: AlarmManager by lazy { getSystemService(Context.ALARM_SERVICE) as AlarmManager }
     private val alarmsHandler by lazy { AlarmsHandler(applicationContext, alarmManager) }
+
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val homeScreenViewModel by viewModels<HomeScreenViewModel>(factoryProducer = {
@@ -45,10 +48,13 @@ class MainActivity : ComponentActivity() {
         })
 
         setContent {
-            val t = taskRepository.allTasksWithAlerts.collectAsState(initial = emptyList())
+
+          val t = taskRepository.allTasksWithAlerts.collectAsState(initial = emptyList())
             LaunchedEffect(t.value) {
                 if (t.value.isNotEmpty())
                     alarmsHandler.createAlarmEntries(t.value)
+
+                    
             }
             PlanAheadTheme {
                 // A surface container using the 'background' color from the theme

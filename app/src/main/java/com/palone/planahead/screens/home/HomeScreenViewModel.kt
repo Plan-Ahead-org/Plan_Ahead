@@ -29,6 +29,7 @@ class HomeScreenViewModel(
     private val _uiState =
         MutableStateFlow(HomeScreenUIState(allTasks = taskRepository.allTasksWithAlerts))
     val uiState: StateFlow<HomeScreenUIState> = _uiState.asStateFlow()
+
     fun updateMockTaskDescription(description: String) {
         _uiState.update {
             _uiState.value.copy(
@@ -118,6 +119,7 @@ class HomeScreenViewModel(
         viewModelScope.launch {
             _uiState.update { _uiState.value.copy(isLoading = true) }
             alertTypes.forEach { alertType ->
+
                 alertTriggers.forEach { alertTrigger ->
                     alerts.add(
                         Alert(
@@ -151,7 +153,6 @@ class HomeScreenViewModel(
         _uiState.update { _uiState.value.copy(shouldShowDrawer = false) }
         uiScope.launch { sheetState.hide() }
     }
-
 
     init {}
 }

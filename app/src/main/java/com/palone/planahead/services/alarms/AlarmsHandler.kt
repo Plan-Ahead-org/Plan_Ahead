@@ -17,7 +17,6 @@ class AlarmsHandler(
     private val context: Context,
     private val alarmManager: AlarmManager
 ) {
-
     fun createAlarmEntries(tasks: List<TaskWithAlerts>) {
         tasks.forEach { (task, alerts) ->
             alerts.forEach { alert: Alert ->
@@ -29,7 +28,6 @@ class AlarmsHandler(
             }
         }
     }
-
     @SuppressLint("MissingPermission") // permissions are granted anyway
     fun addAlarm(alert: Alert, task: Task) {
         val intent = Intent(context, AlarmBroadcastReceiver::class.java)
