@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class HomeScreenViewModel(
@@ -100,13 +101,25 @@ class HomeScreenViewModel(
         }
     }
 
+    fun updateMockTaskAlertSelectedMultipleTimes(times: List<LocalDateTime>, interval: Long) {
+        _uiState.update {
+            _uiState.value.copy(
+                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
+                    alertInterval = interval,
+                    alertSelectedMultipleTimes = times
+                )
+            )
+        }
+    }
+
     fun createDatabaseEntry(
         description: String,
         taskType: TaskType,
         alertTypes: List<AlertType>,
         alertTriggers: List<AlertTrigger>,
         eventMillisInEpoch: Long?,
-        interval: Long?
+        interval: Long?,
+        selectedMultipleTimes: List<LocalDateTime>?
     ) {
         val today = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         val mainTask = Task(
@@ -121,14 +134,29 @@ class HomeScreenViewModel(
             alertTypes.forEach { alertType ->
 
                 alertTriggers.forEach { alertTrigger ->
-                    alerts.add(
-                        Alert(
-                            alertTriggerName = alertTrigger,
-                            alertTypeName = alertType,
-                            eventMillisInEpoch = eventMillisInEpoch,
-                            interval = interval
+                    if (!selectedMultipleTimes.isNullOrEmpty()) {
+                        selectedMultipleTimes.forEach {
+                            val zoneId = ZoneId.systemDefault() // example time zone
+                            val instant = it.atZone(zoneId).toInstant()
+                            val epochMillis = instant.toEpochMilli()
+                            alerts.add(
+                                Alert(
+                                    alertTriggerName = alertTrigger,
+                                    alertTypeName = alertType,
+                                    eventMillisInEpoch = epochMillis,
+                                    interval = interval
+                                )
+                            )
+                        }
+                    } else
+                        alerts.add(
+                            Alert(
+                                alertTriggerName = alertTrigger,
+                                alertTypeName = alertType,
+                                eventMillisInEpoch = eventMillisInEpoch,
+                                interval = interval
+                            )
                         )
-                    )
                 }
             }
             val id = taskRepository.upsert(mainTask)

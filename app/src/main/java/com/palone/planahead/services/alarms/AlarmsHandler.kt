@@ -39,7 +39,10 @@ class AlarmsHandler(
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        Log.i("New alarm found :)", alert.toString() + task.toString())
+        Log.i(
+            "New alarm found :)",
+            alert.toString() + task.toString()
+        ) // will leave it until I'm done with this part of code
         when (task.taskType) {
             TaskType.ONE_TIME -> setOneTimeAlarm(alarmManager, alert, pendingIntent)
             TaskType.CHORE -> setChoreAlarm(alarmManager, alert, pendingIntent)
@@ -69,5 +72,5 @@ fun setChoreAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: Pendi
 
 @SuppressLint("MissingPermission") // permissions are granted anyway
 fun setCronAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
-    // TODO impl later
+    // TODO impl later (do I need it?)
 }

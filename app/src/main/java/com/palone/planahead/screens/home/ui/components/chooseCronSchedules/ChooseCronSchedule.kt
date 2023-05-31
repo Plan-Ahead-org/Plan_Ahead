@@ -66,6 +66,7 @@ fun ChooseCronSchedule(onValueChange: (selectedTimes: List<LocalDateTime>, inter
     CalendarDialog(
         state = calendarState,
         selection = CalendarSelection.Dates(selectedDates = selectedDates.map { schedule -> schedule.date }) { newDates ->
+            selectedDates.clear()
             newDates.forEach { selectedDates += listOf(CronScheduleDateTime(it, listOf())) }
         },
         config = CalendarConfig(style = CalendarStyle.MONTH),

@@ -23,8 +23,11 @@ import com.palone.planahead.data.database.alert.properties.AlertTrigger
 import com.palone.planahead.data.database.alert.properties.AlertType
 import com.palone.planahead.data.database.task.Task
 import com.palone.planahead.data.database.task.properties.TaskType
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun TaskItem(modifier: Modifier = Modifier, task: Task, alerts: List<Alert>) {
@@ -50,7 +53,22 @@ fun TaskItem(modifier: Modifier = Modifier, task: Task, alerts: List<Alert>) {
             )
             Column {
                 Text(text = task.description)
-                alertTypes.forEach { alertType -> Text(text = alertType.name, fontSize = 5.sp) }
+                alertTypes.forEach { alertType ->
+                    Text(text = alertType.name, fontSize = 5.sp)
+                }
+            }
+        }
+        Text(text = task.taskType.name)
+        Column {
+            alerts.forEach {
+                val date = it.eventMillisInEpoch?.let { it1 -> Date(it1) }
+                val pattern = "yyyy-MM-dd HH:mm:ss"
+                val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+                val formattedDate = date?.let { it1 -> simpleDateFormat.format(it1) }
+                if (formattedDate != null) {
+                    Text(text = formattedDate)
+                }
+
             }
         }
         Icon(Icons.Default.ArrowRight, "Trailing Icon")

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -39,6 +41,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
     val uiState = viewModel.uiState.collectAsState().value
     val sheetState = rememberModalBottomSheetState()
     val uiScope = rememberCoroutineScope()
+    val addTaskScrollState = rememberScrollState()
     val tasks =
         viewModel.uiState.collectAsState().value.allTasks.collectAsState(initial = listOf())
     if (viewModel.uiState.collectAsState().value.shouldShowDrawer)
@@ -48,7 +51,8 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .verticalScroll(state = addTaskScrollState),
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -83,7 +87,12 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                     }
 
                     TaskType.CRON -> {
-                        ChooseCronSchedule { _, _ -> }
+                        ChooseCronSchedule { selectedTimes, interval ->
+                            viewModel.updateMockTaskAlertSelectedMultipleTimes(
+                                selectedTimes,
+                                interval
+                            )
+                        }
                     }
                 }
                 Button(onClick = {
@@ -93,7 +102,8 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                         uiState.mockTaskProperties.alertTypes,
                         listOf(AlertTrigger.TIME),
                         uiState.mockTaskProperties.alertEventMillisInEpoch,
-                        uiState.mockTaskProperties.alertInterval
+                        uiState.mockTaskProperties.alertInterval,
+                        uiState.mockTaskProperties.alertSelectedMultipleTimes,
                     )
                 }) {
                     Text(text = "Add") // TODO add this to string res
