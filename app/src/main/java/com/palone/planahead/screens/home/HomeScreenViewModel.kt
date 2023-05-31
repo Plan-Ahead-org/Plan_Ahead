@@ -112,6 +112,27 @@ class HomeScreenViewModel(
         }
     }
 
+    private fun combineAlertWithDateTime(
+        dateTime: LocalDateTime,
+        alertTrigger: AlertTrigger,
+        alertType: AlertType,
+        interval: Long?
+    ): List<Alert> {
+        val alerts = mutableListOf<Alert>()
+        val zoneId = ZoneId.systemDefault()
+        val instant = dateTime.atZone(zoneId).toInstant()
+        val epochMillis = instant.toEpochMilli()
+        alerts.add(
+            Alert(
+                alertTriggerName = alertTrigger,
+                alertTypeName = alertType,
+                eventMillisInEpoch = epochMillis,
+                interval = interval
+            )
+        )
+        return alerts
+    }
+
     fun createDatabaseEntry(
         description: String,
         taskType: TaskType,
@@ -132,18 +153,14 @@ class HomeScreenViewModel(
         viewModelScope.launch {
             _uiState.update { _uiState.value.copy(isLoading = true) }
             alertTypes.forEach { alertType ->
-
                 alertTriggers.forEach { alertTrigger ->
                     if (!selectedMultipleTimes.isNullOrEmpty()) {
                         selectedMultipleTimes.forEach {
-                            val zoneId = ZoneId.systemDefault() // example time zone
-                            val instant = it.atZone(zoneId).toInstant()
-                            val epochMillis = instant.toEpochMilli()
-                            alerts.add(
-                                Alert(
-                                    alertTriggerName = alertTrigger,
-                                    alertTypeName = alertType,
-                                    eventMillisInEpoch = epochMillis,
+                            alerts.addAll(
+                                combineAlertWithDateTime(
+                                    dateTime = it,
+                                    alertTrigger = alertTrigger,
+                                    alertType = alertType,
                                     interval = interval
                                 )
                             )
@@ -159,9 +176,9 @@ class HomeScreenViewModel(
                         )
                 }
             }
-            val id = taskRepository.upsert(mainTask)
+            val id = taskRepository.upsert(mainTask) // send task to database
             alerts.forEach {
-                alertRepository.upsert(it.copy(taskId = id.toInt()))
+                alertRepository.upsert(it.copy(taskId = id.toInt())) // send alert to database
             }
             _uiState.update { _uiState.value.copy(isLoading = false) }
         }
