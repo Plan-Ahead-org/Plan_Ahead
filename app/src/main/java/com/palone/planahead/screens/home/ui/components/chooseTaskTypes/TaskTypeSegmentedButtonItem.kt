@@ -1,4 +1,4 @@
-package com.palone.planahead.screens.home.ui.components.ChooseTaskType
+package com.palone.planahead.screens.home.ui.components.chooseTaskTypes
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons

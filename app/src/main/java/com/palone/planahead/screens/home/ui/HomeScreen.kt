@@ -30,6 +30,7 @@ import com.palone.planahead.screens.home.ui.components.FloatingActionButtonAddTa
 import com.palone.planahead.screens.home.ui.components.TaskItem
 import com.palone.planahead.screens.home.ui.components.chooseAlertTypes.ChooseAlertType
 import com.palone.planahead.screens.home.ui.components.chooseChoreTimes.ChooseChoreTime
+import com.palone.planahead.screens.home.ui.components.chooseCronSchedules.ChooseCronSchedule
 import com.palone.planahead.screens.home.ui.components.segmentedButton.SegmentedRadioButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +82,8 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                         })
                     }
 
-                    TaskType.CRON -> {/* TODO */
+                    TaskType.CRON -> {
+                        ChooseCronSchedule { _, _ -> }
                     }
                 }
                 Button(onClick = {

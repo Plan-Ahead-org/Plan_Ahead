@@ -13,7 +13,7 @@ fun ChooseChoreTime(onValueChange: (Long, Long) -> Unit) {
     ChooseOneTimeEventDate(onValueChange = {
         eventField.value = it
         onValueChange(eventField.value, intervalField.value)
-    }) // first time to show up
+    })
     ChooseChoreInterval(onValueChange = {
         intervalField.value = it
         onValueChange(eventField.value, intervalField.value)
