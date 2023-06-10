@@ -28,5 +28,4 @@ data class Alert(
     val eventMillisInEpoch: Long?,
     val interval: Long?
 
-
 ) : Parcelable
