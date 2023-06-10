@@ -1,4 +1,4 @@
-package com.palone.planahead.screens.home.ui.components.ChooseTaskType
+package com.palone.planahead.screens.home.ui.components.segmentedButton
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,31 +11,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import com.palone.planahead.data.database.task.properties.TaskType
 
 @Composable
-fun TaskTypeSegmentedButtonItem(
+fun SegmentedRadioButtonItem(
     modifier: Modifier = Modifier,
-    taskType: TaskType,
-    selectedTaskType: TaskType,
+    label: Enum<*>,
+    isChecked: Boolean,
     roundedCornerEnd: Dp,
     roundedCornerStart: Dp,
-    onValueChange: (TaskType) -> Unit
+    onValueChange: (Enum<*>) -> Unit
 ) {
     val uncheckedButtonDefaultColor =
         ButtonDefaults.buttonColors(containerColor = Color.LightGray)
     val checkedButtonDefaultColor = ButtonDefaults.buttonColors()
     Button(//Not yet implemented in MaterialDesign 3
         modifier = modifier,
-        colors = if (selectedTaskType == taskType) checkedButtonDefaultColor else uncheckedButtonDefaultColor,
+        colors = if (isChecked) checkedButtonDefaultColor else uncheckedButtonDefaultColor,
         shape = RoundedCornerShape(
             topStart = roundedCornerStart,
             topEnd = roundedCornerEnd,
             bottomStart = roundedCornerStart,
             bottomEnd = roundedCornerEnd
-        ), onClick = { onValueChange(taskType) }) {
-        if (selectedTaskType == taskType)
+        ), onClick = { onValueChange(label) }) {
+        if (isChecked)
             Icon(imageVector = Icons.Default.Done, contentDescription = "checked")
-        Text(text = taskType.name)
+        Text(text = label.name)
     }
 }

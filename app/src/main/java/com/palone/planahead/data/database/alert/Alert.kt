@@ -14,15 +14,19 @@ import kotlinx.parcelize.Parcelize
         entity = Task::class,
         parentColumns = arrayOf("taskId"),
         childColumns = arrayOf("taskId"),
-        onDelete = ForeignKey.SET_NULL
+        onDelete = ForeignKey.CASCADE
     )]
 )
 @Parcelize
 data class Alert(
     @PrimaryKey(autoGenerate = true)
-    val alertId: Int? = null,
+
+  val alertId: Int? = null,
     val taskId: Int? = null,
     val alertTypeName: AlertType,
     val alertTriggerName: AlertTrigger,
-    val alertTriggerData: String? = null
+    val eventMillisInEpoch: Long?,
+    val interval: Long?
+
+    
 ) : Parcelable

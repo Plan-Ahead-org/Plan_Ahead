@@ -42,17 +42,22 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
             context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
 
-        val notification = NotificationCompat.Builder(context, channelId)
+        val singleNotification = NotificationCompat.Builder(context, channelId)
             .setContentTitle(task?.description)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentText("Nie zrobiłeś jeszcze tej rzeczy!")
+            .setContentText("Nie zrobiłeś jeszcze tej rzeczy!").build()
+        val persistentNotification = NotificationCompat.Builder(context, channelId)
+            .setContentTitle(task?.description)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setOngoing(true)
+            .setContentText("Nie zrobiłeś jeszcze tej rzeczy!").build()
 
         if (alert != null) {
-            if (alert.alertTypeName == AlertType.PERSISTENT_NOTIFICATION)
-                notification.setOngoing(true)
             notificationManager.notify(
                 alert.alertId!!,
-                notification.build()
+                if (alert.alertTypeName == AlertType.PERSISTENT_NOTIFICATION)
+                    persistentNotification
+                else singleNotification
             )
         }
     }

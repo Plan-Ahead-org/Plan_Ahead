@@ -1,6 +1,11 @@
 package com.palone.planahead
 
+import android.app.KeyguardManager
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +25,21 @@ class AlarmScreenActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val alert = intent?.getParcelableExtra<Alert>("alert")
         val task = intent?.getParcelableExtra<Task>("task")
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                    or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+        )
+        Log.i("TEST cOntEST", applicationContext.toString())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+            (getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager).requestDismissKeyguard(
+                this,
+                null
+            )
+        }
         setContent {
             MaterialTheme {
                 Surface {

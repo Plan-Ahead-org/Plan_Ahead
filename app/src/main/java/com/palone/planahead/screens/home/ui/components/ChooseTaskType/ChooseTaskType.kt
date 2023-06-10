@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.palone.planahead.data.database.alert.properties.TaskType
+import com.palone.planahead.data.database.task.properties.TaskType
 
 @Composable
 fun ChooseTaskType(
