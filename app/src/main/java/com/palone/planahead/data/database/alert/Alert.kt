@@ -27,6 +27,4 @@ data class Alert(
     val alertTriggerName: AlertTrigger,
     val eventMillisInEpoch: Long?,
     val interval: Long?,
-    val timeBeforeDeadlineAlert: Long?,
-    val isDeadline: Boolean = false
 ) : Parcelable
