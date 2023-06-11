@@ -67,7 +67,6 @@ fun ChooseOneTimeEventDate(modifier: Modifier = Modifier, onValueChange: (Long) 
                 }
             }) {
             DatePicker(state = datePickerState)
-
         }
     if (shouldShowTimePicker.value)
         DatePickerDialog(

@@ -1,4 +1,4 @@
-package com.palone.planahead.screens.home.ui.components.ChooseTaskType
+package com.palone.planahead.screens.home.ui.components.chooseTaskTypes
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
