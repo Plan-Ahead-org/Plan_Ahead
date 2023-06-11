@@ -14,7 +14,4 @@ data class MockTaskProperties(
     val alertEventMillisInEpoch: Long? = null,
     val alertInterval: Long? = null,
     val alertSelectedMultipleTimes: List<LocalDateTime> = emptyList(),
-    val hasDeadline: Boolean = false,
-    val deadline: Long = 0L,
-    val timeBeforeDeadlineAlert: List<Long> = emptyList()
 )

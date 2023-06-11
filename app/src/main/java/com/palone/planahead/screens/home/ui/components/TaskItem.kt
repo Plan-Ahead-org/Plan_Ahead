@@ -84,17 +84,9 @@ fun TaskItemPreview() {
                 DateTimeFormatter.ISO_LOCAL_DATE_TIME
             ), isCompleted = false
         ), alerts = listOf(
-            Alert(
-                1,
-                1,
-                AlertType.PERSISTENT_NOTIFICATION,
-                AlertTrigger.TIME,
-                1684973640000,
-                null,
-                null
-            ),
-            Alert(1, 1, AlertType.NOTIFICATION, AlertTrigger.TIME, 1684973640000, null, null),
-            Alert(1, 1, AlertType.ALARM, AlertTrigger.LOCATION, 1684973640000, null, null)
+            Alert(1, 1, AlertType.PERSISTENT_NOTIFICATION, AlertTrigger.TIME, 1684973640000, null),
+            Alert(1, 1, AlertType.NOTIFICATION, AlertTrigger.TIME, 1684973640000, null),
+            Alert(1, 1, AlertType.ALARM, AlertTrigger.LOCATION, 1684973640000, null)
         )
     )
 }

@@ -26,7 +26,7 @@ import com.palone.planahead.data.database.task.properties.TaskPriority
 import com.palone.planahead.data.database.task.properties.TaskType
 import com.palone.planahead.screens.home.HomeScreenViewModel
 import com.palone.planahead.screens.home.ui.components.AddTaskDescription
-import com.palone.planahead.screens.home.ui.components.ChooseOneTimeEventDate.ChooseOneTimeEventDate
+import com.palone.planahead.screens.home.ui.components.ChooseOneTimeEventDate
 import com.palone.planahead.screens.home.ui.components.ChooseTaskPriority
 import com.palone.planahead.screens.home.ui.components.FloatingActionButtonAddTask
 import com.palone.planahead.screens.home.ui.components.TaskItem
@@ -70,22 +70,12 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                     selectedField = uiState.mockTaskProperties.baseTask.taskType,
                     onValueChange = { viewModel.updateMockTaskType(it as TaskType) }
                 )
-
-
                 when (uiState.mockTaskProperties.baseTask.taskType) {
                     TaskType.ONE_TIME -> {
-                        ChooseOneTimeEventDate(onValueChange = { selectedDateMillis, deadline, timeBeforeDeadlineAlert ->
+                        ChooseOneTimeEventDate(onValueChange = {
                             viewModel.updateMockTaskEventMillisInEpoch(
-                                selectedDateMillis
+                                it
                             )
-                            if (deadline != null) {
-                                viewModel.updateMockTaskDeadline(deadline)
-                            }
-                            if (timeBeforeDeadlineAlert != null) {
-                                viewModel.updateMockTaskTimesToNotifyBeforeDeadline(
-                                    timeBeforeDeadlineAlert
-                                )
-                            }
                         })
                     }
 
@@ -114,9 +104,6 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                         uiState.mockTaskProperties.alertEventMillisInEpoch,
                         uiState.mockTaskProperties.alertInterval,
                         uiState.mockTaskProperties.alertSelectedMultipleTimes,
-                        uiState.mockTaskProperties.timeBeforeDeadlineAlert,
-                        uiState.mockTaskProperties.deadline,
-                        uiState.mockTaskProperties.hasDeadline
                     )
                 }) {
                     Text(text = "Add") // TODO add this to string res

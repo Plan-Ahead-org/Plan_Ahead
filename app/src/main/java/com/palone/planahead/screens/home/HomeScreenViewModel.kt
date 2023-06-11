@@ -101,26 +101,6 @@ class HomeScreenViewModel(
         }
     }
 
-    fun updateMockTaskTimesToNotifyBeforeDeadline(listOfTimesInEpochMillis: List<Long>) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    timeBeforeDeadlineAlert = listOfTimesInEpochMillis
-                )
-            )
-        }
-    }
-
-    fun updateMockTaskDeadline(deadline: Long) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    deadline = deadline
-                )
-            )
-        }
-    }
-
     fun updateMockTaskAlertSelectedMultipleTimes(times: List<LocalDateTime>, interval: Long) {
         _uiState.update {
             _uiState.value.copy(
@@ -147,8 +127,7 @@ class HomeScreenViewModel(
                 alertTriggerName = alertTrigger,
                 alertTypeName = alertType,
                 eventMillisInEpoch = epochMillis,
-                interval = interval,
-                timeBeforeDeadlineAlert = null,
+                interval = interval
             )
         )
         return alerts
@@ -161,10 +140,7 @@ class HomeScreenViewModel(
         alertTriggers: List<AlertTrigger>,
         eventMillisInEpoch: Long?,
         interval: Long?,
-        selectedMultipleTimes: List<LocalDateTime>?,
-        timeBeforeDeadlineAlert: List<Long>?,
-        deadline: Long?,
-        hasDeadline: Boolean
+        selectedMultipleTimes: List<LocalDateTime>?
     ) {
         val today = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         val mainTask = Task(
@@ -179,36 +155,25 @@ class HomeScreenViewModel(
             alertTypes.forEach { alertType ->
                 alertTriggers.forEach { alertTrigger ->
                     if (!selectedMultipleTimes.isNullOrEmpty()) {
-                        alerts.addAll(
-                            combineCron(
-                                selectedMultipleTimes,
-                                alertTrigger,
-                                alertType,
-                                interval
+                        selectedMultipleTimes.forEach {
+                            alerts.addAll(
+                                combineAlertWithDateTime(
+                                    dateTime = it,
+                                    alertTrigger = alertTrigger,
+                                    alertType = alertType,
+                                    interval = interval
+                                )
                             )
-                        )
-                    } else if (timeBeforeDeadlineAlert != null && deadline != null) { // ONE_TIME
-                        alerts.addAll(
-                            combineOneTime(
-                                timeBeforeDeadlineAlert,
-                                alertTrigger,
-                                alertType,
-                                deadline,
-                                interval
-                            )
-                        )
-                    } else {
+                        }
+                    } else
                         alerts.add(
-                            Alert( // CHORE
+                            Alert(
                                 alertTriggerName = alertTrigger,
                                 alertTypeName = alertType,
                                 eventMillisInEpoch = eventMillisInEpoch,
-                                interval = interval,
-                                timeBeforeDeadlineAlert = 0L
+                                interval = interval
                             )
                         )
-                    }
-
                 }
             }
             val id = taskRepository.upsert(mainTask) // send task to database
@@ -217,48 +182,6 @@ class HomeScreenViewModel(
             }
             _uiState.update { _uiState.value.copy(isLoading = false) }
         }
-    }
-
-    private fun combineCron(
-        selectedMultipleTimes: List<LocalDateTime>,
-        alertTrigger: AlertTrigger,
-        alertType: AlertType,
-        interval: Long?
-    ): List<Alert> {
-        val alerts = mutableListOf<Alert>()
-        selectedMultipleTimes.forEach {//CRON
-            alerts.addAll(
-                combineAlertWithDateTime(
-                    dateTime = it,
-                    alertTrigger = alertTrigger,
-                    alertType = alertType,
-                    interval = interval
-                )
-            )
-        }
-        return alerts.toList()
-    }
-
-    private fun combineOneTime(
-        timeBeforeDeadlineAlert: List<Long>,
-        alertTrigger: AlertTrigger,
-        alertType: AlertType,
-        deadline: Long,
-        interval: Long?
-    ): List<Alert> {
-        val alerts = mutableListOf<Alert>()
-        timeBeforeDeadlineAlert.forEach {
-            alerts.add( // ONE_TIME
-                Alert(
-                    alertTriggerName = alertTrigger,
-                    alertTypeName = alertType,
-                    eventMillisInEpoch = deadline.minus(it),
-                    interval = interval,
-                    timeBeforeDeadlineAlert = it
-                )
-            )
-        }
-        return alerts.toList()
     }
 
 
