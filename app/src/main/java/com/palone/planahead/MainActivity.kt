@@ -15,12 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
+import com.example.compose.PlanAheadTheme
 import com.palone.planahead.data.database.AlertRepository
 import com.palone.planahead.data.database.PlanAheadDatabase
 import com.palone.planahead.data.database.TaskRepository
 import com.palone.planahead.screens.home.HomeScreenViewModel
+import com.palone.planahead.screens.taskEdit.TaskEditViewModel
 import com.palone.planahead.services.alarms.AlarmsHandler
-import com.palone.planahead.ui.theme.PlanAheadTheme
 
 class MainActivity : ComponentActivity() {
     private val db by lazy {
@@ -46,7 +47,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         })
-
+        val taskEditScreenViewModel by viewModels<TaskEditViewModel>(factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return TaskEditViewModel(taskRepository, alertRepository) as T
+                }
+            }
+        })
         setContent {
             val t = taskRepository.allTasksWithAlerts.collectAsState(initial = emptyList())
             if (t.value.isNotEmpty()) {
@@ -60,7 +67,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PlanAheadApp(homeScreenViewModel = homeScreenViewModel)
+                    PlanAheadApp(
+                        homeScreenViewModel = homeScreenViewModel,
+                        taskEditViewModel = taskEditScreenViewModel
+                    )
                 }
             }
         }

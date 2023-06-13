@@ -1,0 +1,7 @@
+package com.palone.planahead.screens.taskEdit.data
+
+enum class TaskRepeatMode {
+    DAILY,
+    WEEKLY,
+    MONTHLY
+}

@@ -1,8 +1,9 @@
 package com.palone.planahead.screens.home.ui.components
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,10 +14,12 @@ fun AddTaskDescription(
     value: String,
     onValueChange: (String) -> Unit
 ) {
-    Column(modifier = modifier) {
-        Text(text = "Description:") // TODO add this to res strings
-        TextField(value = value, onValueChange = onValueChange)
-    }
+    OutlinedTextField(
+        colors = TextFieldDefaults.colors(unfocusedContainerColor = MaterialTheme.colorScheme.background),
+        modifier = modifier,
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(text = "Name:") })
 }
 
 @Preview

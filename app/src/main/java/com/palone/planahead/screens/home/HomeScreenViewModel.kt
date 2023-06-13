@@ -1,19 +1,15 @@
 package com.palone.planahead.screens.home
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.palone.planahead.data.HomeScreenUIState
 import com.palone.planahead.data.database.AlertRepository
 import com.palone.planahead.data.database.TaskRepository
 import com.palone.planahead.data.database.alert.Alert
 import com.palone.planahead.data.database.alert.properties.AlertTrigger
 import com.palone.planahead.data.database.alert.properties.AlertType
 import com.palone.planahead.data.database.task.Task
-import com.palone.planahead.data.database.task.properties.TaskPriority
 import com.palone.planahead.data.database.task.properties.TaskType
-import kotlinx.coroutines.CoroutineScope
+import com.palone.planahead.screens.home.data.HomeScreenUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,107 +26,6 @@ class HomeScreenViewModel(
     private val _uiState =
         MutableStateFlow(HomeScreenUIState(allTasks = taskRepository.allTasksWithAlerts))
     val uiState: StateFlow<HomeScreenUIState> = _uiState.asStateFlow()
-
-    fun updateMockTaskDescription(description: String) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    baseTask = _uiState.value.mockTaskProperties.baseTask.copy(description = description)
-                )
-            )
-        }
-    }
-
-    fun updateMockAlertTypes(alertTypes: List<AlertType>) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    alertTypes = alertTypes
-                )
-            )
-        }
-    }
-
-    fun updateMockTaskType(taskType: TaskType) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    baseTask = _uiState.value.mockTaskProperties.baseTask.copy(taskType = taskType)
-                )
-            )
-        }
-    }
-
-    fun updateMockTaskAlertTriggers(alertTriggers: List<AlertTrigger>) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    alertTriggers = alertTriggers
-                )
-            )
-        }
-    }
-
-    fun updateMockTaskPriority(taskPriority: TaskPriority) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    baseTask = _uiState.value.mockTaskProperties.baseTask.copy(priority = taskPriority) // wtf
-                )
-            )
-        }
-    }
-
-    fun updateMockTaskEventMillisInEpoch(millis: Long) {//mockAlertEventMillisInEpoch
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    alertEventMillisInEpoch = millis
-                )
-            )
-        }
-    }
-
-    fun updateMockTaskInterval(interval: Long) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    alertInterval = interval
-                )
-            )
-        }
-    }
-
-    fun updateMockTaskTimesToNotifyBeforeDeadline(listOfTimesInEpochMillis: List<Long>) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    timeBeforeDeadlineAlert = listOfTimesInEpochMillis
-                )
-            )
-        }
-    }
-
-    fun updateMockTaskDeadline(deadline: Long) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    deadline = deadline
-                )
-            )
-        }
-    }
-
-    fun updateMockTaskAlertSelectedMultipleTimes(times: List<LocalDateTime>, interval: Long) {
-        _uiState.update {
-            _uiState.value.copy(
-                mockTaskProperties = _uiState.value.mockTaskProperties.copy(
-                    alertInterval = interval,
-                    alertSelectedMultipleTimes = times
-                )
-            )
-        }
-    }
 
     private fun combineAlertWithDateTime(
         dateTime: LocalDateTime,
@@ -261,19 +156,8 @@ class HomeScreenViewModel(
         return alerts.toList()
     }
 
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    fun showBottomSheet(sheetState: SheetState, uiScope: CoroutineScope) {
-        uiScope.launch {
-            _uiState.update { _uiState.value.copy(shouldShowDrawer = true) }
-            sheetState.expand()
-        }
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    fun hideShowBottomSheet(sheetState: SheetState, uiScope: CoroutineScope) {
-        _uiState.update { _uiState.value.copy(shouldShowDrawer = false) }
-        uiScope.launch { sheetState.hide() }
+    fun shouldShowTaskEditScreen(value: Boolean) {
+        _uiState.update { _uiState.value.copy(shouldShowEditTaskScreen = value) }
     }
 
     init {}
