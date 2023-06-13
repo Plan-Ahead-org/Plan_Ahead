@@ -1,6 +1,5 @@
 package com.palone.planahead.services.alarms
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -28,7 +27,7 @@ class AlarmsHandler(
             }
         }
     }
-    @SuppressLint("MissingPermission") // permissions are granted anyway
+
     fun addAlarm(alert: Alert, task: Task) {
         val intent = Intent(context, AlarmBroadcastReceiver::class.java)
         intent.putExtra("alert", alert)
@@ -51,7 +50,6 @@ class AlarmsHandler(
     }
 }
 
-@SuppressLint("MissingPermission") // permissions are granted anyway
 fun setOneTimeAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
     alarmManager.setExactAndAllowWhileIdle(
         AlarmManager.RTC_WAKEUP,
@@ -60,7 +58,6 @@ fun setOneTimeAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: Pen
     )
 }
 
-@SuppressLint("MissingPermission") // permissions are granted anyway
 fun setChoreAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
     alarmManager.setRepeating(
         AlarmManager.RTC_WAKEUP,
@@ -70,7 +67,6 @@ fun setChoreAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: Pendi
     )
 }
 
-@SuppressLint("MissingPermission") // permissions are granted anyway
 fun setCronAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
     // TODO impl later (do I need it?)
 }
