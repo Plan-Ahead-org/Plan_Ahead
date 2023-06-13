@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.palone.planahead.screens.home.ui.components.AddTaskDescription
 import com.palone.planahead.screens.taskEdit.TaskEditViewModel
 import com.palone.planahead.screens.taskEdit.ui.notificationSelection.NotificationCreator
 import com.palone.planahead.screens.taskEdit.ui.notificationSelection.NotificationSelection
