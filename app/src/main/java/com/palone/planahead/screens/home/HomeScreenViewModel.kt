@@ -43,7 +43,6 @@ class HomeScreenViewModel(
                 alertTypeName = alertType,
                 eventMillisInEpoch = epochMillis,
                 interval = interval,
-                timeBeforeDeadlineAlert = null,
             )
         )
         return alerts
@@ -99,7 +98,6 @@ class HomeScreenViewModel(
                                 alertTypeName = alertType,
                                 eventMillisInEpoch = eventMillisInEpoch,
                                 interval = interval,
-                                timeBeforeDeadlineAlert = 0L
                             )
                         )
                     }
@@ -149,7 +147,6 @@ class HomeScreenViewModel(
                     alertTypeName = alertType,
                     eventMillisInEpoch = deadline.minus(it),
                     interval = interval,
-                    timeBeforeDeadlineAlert = it
                 )
             )
         }
