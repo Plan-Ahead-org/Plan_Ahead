@@ -1,8 +1,13 @@
 package com.palone.planahead.screens.taskEdit
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.palone.planahead.data.database.AlertRepository
 import com.palone.planahead.data.database.TaskRepository
+import com.palone.planahead.data.database.alert.Alert
+import com.palone.planahead.data.database.alert.properties.AlertTrigger
+import com.palone.planahead.data.database.task.Task
+import com.palone.planahead.data.database.task.properties.TaskPriority
 import com.palone.planahead.data.database.task.properties.TaskType
 import com.palone.planahead.screens.taskEdit.data.AlertFieldProperty
 import com.palone.planahead.screens.taskEdit.data.TaskEditUIState
@@ -10,13 +15,19 @@ import com.palone.planahead.screens.taskEdit.data.TaskRepeatMode
 import com.palone.planahead.screens.taskEdit.data.typeFieldProperties.ChoreProperties
 import com.palone.planahead.screens.taskEdit.data.typeFieldProperties.CronProperties
 import com.palone.planahead.screens.taskEdit.data.typeFieldProperties.OneTimeProperties
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
+import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
 class TaskEditViewModel(
@@ -27,9 +38,9 @@ class TaskEditViewModel(
         MutableStateFlow(TaskEditUIState())
     val uiState: StateFlow<TaskEditUIState> = _uiState.asStateFlow()
 
-    private val _taskType =
+    private val _selectedTaskType =
         MutableStateFlow(TaskType.ONE_TIME)
-    val taskType: StateFlow<TaskType> = _taskType.asStateFlow()
+    val selectedTaskType: StateFlow<TaskType> = _selectedTaskType.asStateFlow()
 
     private val _oneTimeProperties =
         MutableStateFlow(OneTimeProperties())
@@ -46,6 +57,93 @@ class TaskEditViewModel(
     private val _alertProperties =
         MutableStateFlow(listOf<AlertFieldProperty>())
     val alertProperties: StateFlow<List<AlertFieldProperty>> = _alertProperties.asStateFlow()
+    var databaseJob: Job? = null
+
+
+    fun resetProperties() {
+        viewModelScope.launch {
+            if ((databaseJob == null) || (databaseJob!!.isCompleted)) { // make sure that this operation won't affect database operations
+                _alertProperties.update { emptyList() }
+                _oneTimeProperties.update { OneTimeProperties() }
+                _choreProperties.update { ChoreProperties() }
+                _cronProperties.update { CronProperties() }
+            } else {
+                delay(500)
+                resetProperties() // check if database operations are completed
+            }
+        }
+    }
+
+    fun createDatabaseEntry(type: TaskType = _selectedTaskType.value, name: String) {
+        databaseJob = viewModelScope.launch {
+            when (type) {
+                TaskType.ONE_TIME -> createOneTimeDatabaseEntry(name = name)
+                TaskType.CRON -> createCronDatabaseEntry(name = name)
+                TaskType.CHORE -> createChoreDatabaseEntry(name = name)
+            }
+        }
+    }
+
+    private suspend fun createOneTimeDatabaseEntry(
+        typeProperties: OneTimeProperties = _oneTimeProperties.value,
+        alertProperty: List<AlertFieldProperty> = _alertProperties.value,
+        name: String
+    ) {
+        val millisToTaskEvent = getEpochMillisFromLocalDate(typeProperties.date)
+        val task = Task(
+            taskId = null,
+            taskType = TaskType.ONE_TIME,
+            description = name,
+            LocalDateTime.now().toString(),
+            isCompleted = false,
+            priority = TaskPriority.LOW
+        )
+        val taskId = taskRepository.upsert(task)
+        addAlerts(alertProperty, millisToTaskEvent, taskId)
+    }
+
+    private suspend fun addAlerts(
+        alertProperty: List<AlertFieldProperty>,
+        millisToTaskEvent: Long,
+        taskId: Long
+    ) {
+        alertProperty.forEach {
+            val alertMillisDuration =
+                Duration.of(it.intervalValue.toLong(), it.intervalUnit).toMillis()
+            val millisToNotifyBeforeTaskEvent = millisToTaskEvent - alertMillisDuration
+            val alert = Alert(
+                taskId = taskId.toInt(),
+                alertTypeName = it.type,
+                alertTriggerName = AlertTrigger.TIME,
+                eventMillisInEpoch = millisToNotifyBeforeTaskEvent,
+                interval = alertMillisDuration
+            )
+            alertRepository.upsert(alert)
+        }
+    }
+
+    private fun createCronDatabaseEntry(
+        data: CronProperties = _cronProperties.value,
+        name: String
+    ) {
+
+    }
+
+    private fun createChoreDatabaseEntry(
+        data: ChoreProperties = _choreProperties.value,
+        name: String
+    ) {
+
+    }
+
+    private fun getEpochMillisFromLocalDate(dateAndTime: LocalDateTime): Long {
+        val instant = dateAndTime.toInstant(ZoneId.systemDefault().rules.getOffset(dateAndTime))
+        return instant.toEpochMilli()
+    }
+
+    private fun getEpochMillisFromLocalDate(date: LocalDate) {
+
+    }
 
 
     fun insertAlertProperty(alert: AlertFieldProperty) {
@@ -67,8 +165,8 @@ class TaskEditViewModel(
     }
 
 
-    fun updateTaskType(type: TaskType) {
-        _taskType.update { type }
+    fun updateSelectedTaskType(type: TaskType) {
+        _selectedTaskType.update { type }
     }
 
     fun updateIntervalValue(value: Int) {

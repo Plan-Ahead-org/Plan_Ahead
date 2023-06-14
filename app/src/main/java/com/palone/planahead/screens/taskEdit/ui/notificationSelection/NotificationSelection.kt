@@ -1,5 +1,6 @@
 package com.palone.planahead.screens.taskEdit.ui.notificationSelection
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.palone.planahead.screens.taskEdit.TaskEditViewModel
 
@@ -25,16 +27,17 @@ import com.palone.planahead.screens.taskEdit.TaskEditViewModel
 fun NotificationSelection(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) {
     val notifications = viewModel.alertProperties.collectAsState().value
     Card(
+        border = BorderStroke(2.dp, color = MaterialTheme.colorScheme.onSecondary),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+        modifier = Modifier.background(Color.Transparent)
     ) {
         Column(
             modifier = modifier
                 .fillMaxWidth(0.8f)
                 .padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Notifications")
+            Text(text = "Notifications (${notifications.size})")
             notifications.forEachIndexed { index, item ->
                 NotificationItem(
                     type = item.type,

@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.palone.planahead.data.database.task.properties.TaskType
 import com.palone.planahead.screens.taskEdit.TaskEditViewModel
@@ -26,7 +27,7 @@ fun TaskTypeSection(modifier: Modifier = Modifier, viewModel: TaskEditViewModel)
             containerColor = MaterialTheme.colorScheme.background,
         ),
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+        modifier = Modifier.background(Color.Transparent)
     ) {
         Column(
             modifier = modifier
@@ -36,9 +37,9 @@ fun TaskTypeSection(modifier: Modifier = Modifier, viewModel: TaskEditViewModel)
             Text(text = "Type")
             SegmentedRadioButton(modifier,
                 fields = TaskType.values().toList(),
-                selectedField = viewModel.taskType.collectAsState().value,
+                selectedField = viewModel.selectedTaskType.collectAsState().value,
                 onValueChange = { newTaskType ->
-                    viewModel.updateTaskType(newTaskType as TaskType)
+                    viewModel.updateSelectedTaskType(newTaskType as TaskType)
                 })
             TypeProperties(viewModel = viewModel)
         }

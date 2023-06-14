@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.palone.planahead.screens.taskEdit.data.AlertFieldProperty
@@ -35,7 +36,7 @@ fun NotificationCreator(
             )
         ),
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+        modifier = Modifier.background(Color.Transparent)
     ) {
         Column(
             modifier = modifier,
@@ -57,7 +58,7 @@ fun NotificationCreator(
                     }
                 )
             }
-            Text(text = "+ Add another", fontSize = 20.sp, modifier = Modifier
+            Text(text = "+ Add this notification", fontSize = 20.sp, modifier = Modifier
                 .clickable {
                     onNotificationCreation(notification.value)
                     notification.value = AlertFieldProperty()

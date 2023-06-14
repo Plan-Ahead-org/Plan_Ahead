@@ -24,7 +24,7 @@ fun TypeProperties(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) 
     val shouldShowDateAndTimeDialog = remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
-        when (viewModel.taskType.collectAsState().value) {
+        when (viewModel.selectedTaskType.collectAsState().value) {
             TaskType.ONE_TIME -> OneTimeProperties(
                 dateAndTime = oneTimeProperties.date,
                 onChooseDateAndTimeEvent = { shouldShowDateAndTimeDialog.value = true }) // TODO
