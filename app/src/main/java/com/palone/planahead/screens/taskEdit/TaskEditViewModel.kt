@@ -99,34 +99,94 @@ class TaskEditViewModel(
             priority = TaskPriority.LOW
         )
         val taskId = taskRepository.upsert(task)
-        addAlerts(alertProperty, millisToTaskEvent, taskId)
+        addAlertsToDatabase(alertProperty, millisToTaskEvent, taskId)
     }
 
-    private suspend fun addAlerts(
+    private suspend fun addAlertsToDatabase(
         alertProperty: List<AlertFieldProperty>,
         millisToTaskEvent: Long,
-        taskId: Long
+        taskId: Long,
+        interval: Long = 0,
     ) {
         alertProperty.forEach {
             val alertMillisDuration =
-                Duration.of(it.intervalValue.toLong(), it.intervalUnit).toMillis()
+                Duration.of(
+                    it.valueToShowAlertBeforeTaskEvent.toLong(),
+                    it.unitToShowAlertBeforeTaskEvent
+                ).toMillis()
             val millisToNotifyBeforeTaskEvent = millisToTaskEvent - alertMillisDuration
             val alert = Alert(
                 taskId = taskId.toInt(),
                 alertTypeName = it.type,
                 alertTriggerName = AlertTrigger.TIME,
                 eventMillisInEpoch = millisToNotifyBeforeTaskEvent,
-                interval = alertMillisDuration
+                interval = interval
             )
             alertRepository.upsert(alert)
         }
     }
 
-    private fun createCronDatabaseEntry(
-        data: CronProperties = _cronProperties.value,
+    private suspend fun createCronDatabaseEntry(
+        typeProperties: CronProperties = _cronProperties.value,
+        alertProperty: List<AlertFieldProperty> = _alertProperties.value,
         name: String
     ) {
+        val todayDateTime = LocalDateTime.of(LocalDate.now(), typeProperties.dayTime)
+        val millisToTaskEvent = getEpochMillisFromLocalDate(todayDateTime)
+        val task = Task(
+            taskId = null,
+            taskType = TaskType.CRON,
+            description = name,
+            LocalDateTime.now().toString(),
+            isCompleted = false,
+            priority = TaskPriority.LOW
+        )
+        val taskId = taskRepository.upsert(task)
+        when (typeProperties.repeatMode) {
+            TaskRepeatMode.DAILY -> addAlertsToDatabase(
+                alertProperty,
+                millisToTaskEvent,
+                taskId,
+                Duration.of(1, ChronoUnit.DAYS).toMillis()
+            )
 
+            TaskRepeatMode.WEEKLY -> addWeeklyAlertsToDatabaseByDays(
+                taskId,
+                typeProperties.daysOfWeek,
+                typeProperties.dayTime,
+                alertProperty
+            )
+
+            TaskRepeatMode.MONTHLY -> TODO()
+        }
+    }
+
+    private suspend fun addWeeklyAlertsToDatabaseByDays(
+        taskId: Long,
+        daysOfWeek: List<DayOfWeek>,
+        dayTime: LocalTime,
+        alertProperty: List<AlertFieldProperty>
+    ) {
+        daysOfWeek.forEach {
+            val wantedDay = LocalDate.now().plusDays(getDaysToNextDayOfWeek(it).toLong())
+            val wantedDayTime = LocalDateTime.of(wantedDay, dayTime)
+            addAlertsToDatabase(
+                alertProperty,
+                getEpochMillisFromLocalDate(wantedDayTime),
+                taskId,
+                Duration.of(7, ChronoUnit.DAYS).toMillis()
+            ) // Weekly
+        }
+    }
+    
+    private fun getDaysToNextDayOfWeek(day: DayOfWeek): Int {
+        var nearestDay = LocalDate.now()
+        var count = 0
+        while (nearestDay.dayOfWeek.value != day.value) {
+            nearestDay = nearestDay.plusDays(1)
+            count++
+        }
+        return count
     }
 
     private fun createChoreDatabaseEntry(
@@ -140,11 +200,6 @@ class TaskEditViewModel(
         val instant = dateAndTime.toInstant(ZoneId.systemDefault().rules.getOffset(dateAndTime))
         return instant.toEpochMilli()
     }
-
-    private fun getEpochMillisFromLocalDate(date: LocalDate) {
-
-    }
-
 
     fun insertAlertProperty(alert: AlertFieldProperty) {
         _alertProperties.update { _alertProperties.value + listOf(alert) }
@@ -186,7 +241,7 @@ class TaskEditViewModel(
     }
 
     fun updateRepeatTime(time: LocalTime) {
-        _cronProperties.update { _cronProperties.value.copy(repeatTime = time) }
+        _cronProperties.update { _cronProperties.value.copy(dayTime = time) }
     }
 
     fun updateDateAndTime(dateAndTime: LocalDateTime) {

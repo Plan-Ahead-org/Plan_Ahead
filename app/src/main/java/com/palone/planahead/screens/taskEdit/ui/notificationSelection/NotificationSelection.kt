@@ -41,8 +41,8 @@ fun NotificationSelection(modifier: Modifier = Modifier, viewModel: TaskEditView
             notifications.forEachIndexed { index, item ->
                 NotificationItem(
                     type = item.type,
-                    intervalValue = item.intervalValue,
-                    intervalUnit = item.intervalUnit,
+                    intervalValue = item.valueToShowAlertBeforeTaskEvent,
+                    intervalUnit = item.unitToShowAlertBeforeTaskEvent,
                     onTypeChange = { type ->
                         viewModel.editAlertProperty(index, notifications[index].copy(type = type))
 
@@ -50,7 +50,10 @@ fun NotificationSelection(modifier: Modifier = Modifier, viewModel: TaskEditView
                     onIntervalPropertiesChange = { value, unit ->
                         viewModel.editAlertProperty(
                             index,
-                            notifications[index].copy(intervalValue = value, intervalUnit = unit)
+                            notifications[index].copy(
+                                valueToShowAlertBeforeTaskEvent = value,
+                                unitToShowAlertBeforeTaskEvent = unit
+                            )
                         )
                     },
                     deleteContent = {

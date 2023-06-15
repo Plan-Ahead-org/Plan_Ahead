@@ -39,12 +39,12 @@ fun TaskEditScreen(viewModel: TaskEditViewModel, navHostController: NavHostContr
                 viewModel.resetProperties()
                 navHostController.navigate(ScreensProperties.HomeScreen.route)
             }
-        }, floatingActionButtonPosition = FabPosition.Center) {
+        }, floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(state = addTaskScrollState)
-                    .padding(it),
+                    .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AddTaskDescription(

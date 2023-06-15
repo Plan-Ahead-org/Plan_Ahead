@@ -5,6 +5,6 @@ import java.time.temporal.ChronoUnit
 
 data class AlertFieldProperty(
     val type: AlertType = AlertType.NOTIFICATION,
-    val intervalValue: Int = 1,
-    val intervalUnit: ChronoUnit = ChronoUnit.HOURS
+    val valueToShowAlertBeforeTaskEvent: Int = 1,
+    val unitToShowAlertBeforeTaskEvent: ChronoUnit = ChronoUnit.HOURS
 )

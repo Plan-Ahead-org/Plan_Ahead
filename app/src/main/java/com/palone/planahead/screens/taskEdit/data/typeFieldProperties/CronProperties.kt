@@ -6,6 +6,6 @@ import java.time.LocalTime
 
 data class CronProperties(
     val repeatMode: TaskRepeatMode = TaskRepeatMode.WEEKLY,
-    val repeatTime: LocalTime = LocalTime.now(),
+    val dayTime: LocalTime = LocalTime.now(),
     val daysOfWeek: List<DayOfWeek> = listOf()
 )

@@ -9,8 +9,6 @@ import com.palone.planahead.data.database.TaskWithAlerts
 import com.palone.planahead.data.database.alert.Alert
 import com.palone.planahead.data.database.task.Task
 import com.palone.planahead.data.database.task.properties.TaskType
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
 
 class AlarmsHandler(
     private val context: Context,
@@ -19,16 +17,16 @@ class AlarmsHandler(
     fun createAlarmEntries(tasks: List<TaskWithAlerts>) {
         tasks.forEach { (task, alerts) ->
             alerts.forEach { alert: Alert ->
-                val currentTimeInMilliEpoch =
-                    LocalDateTime.now().toEpochSecond(OffsetDateTime.now().offset) * 1000
-                if ((alert.eventMillisInEpoch ?: 0) > currentTimeInMilliEpoch) {
+                val shouldShowBackwardsToo =
+                    (task.taskType != TaskType.ONE_TIME) && !task.isCompleted
+                if (shouldShowBackwardsToo) {
                     addAlarm(alert, task)
                 }
             }
         }
     }
 
-    fun addAlarm(alert: Alert, task: Task) {
+    private fun addAlarm(alert: Alert, task: Task) {
         val intent = Intent(context, AlarmBroadcastReceiver::class.java)
         intent.putExtra("alert", alert)
         intent.putExtra("task", task)

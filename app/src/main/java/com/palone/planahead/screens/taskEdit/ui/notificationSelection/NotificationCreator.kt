@@ -49,12 +49,15 @@ fun NotificationCreator(
             ) {
                 NotificationItem(modifier = Modifier.padding(10.dp),
                     type = notification.value.type,
-                    intervalValue = notification.value.intervalValue,
-                    intervalUnit = notification.value.intervalUnit,
+                    intervalValue = notification.value.valueToShowAlertBeforeTaskEvent,
+                    intervalUnit = notification.value.unitToShowAlertBeforeTaskEvent,
                     onTypeChange = { notification.value = notification.value.copy(type = it) },
                     onIntervalPropertiesChange = { value, unit ->
                         notification.value =
-                            notification.value.copy(intervalUnit = unit, intervalValue = value)
+                            notification.value.copy(
+                                unitToShowAlertBeforeTaskEvent = unit,
+                                valueToShowAlertBeforeTaskEvent = value
+                            )
                     }
                 )
             }
