@@ -1,6 +1,6 @@
 package com.palone.planahead.screens.taskEdit.data
 
-enum class TaskRepeatMode {
+enum class TaskRepeatPeriod {
     DAILY,
     WEEKLY,
     MONTHLY

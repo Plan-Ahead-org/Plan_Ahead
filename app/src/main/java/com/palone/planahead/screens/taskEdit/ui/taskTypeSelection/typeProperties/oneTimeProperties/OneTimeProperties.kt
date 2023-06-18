@@ -14,5 +14,6 @@ fun OneTimeProperties(
 ) {
     DateField(modifier = modifier.fillMaxWidth(),
         dateAndTime = dateAndTime,
-        onChooseDateAndTimeEvent = { onChooseDateAndTimeEvent() })
+        onChooseDateAndTimeEvent = { onChooseDateAndTimeEvent() }
+    )
 }

@@ -36,10 +36,10 @@ fun TaskTypeSection(modifier: Modifier = Modifier, viewModel: TaskEditViewModel)
         ) {
             Text(text = "Type")
             SegmentedRadioButton(modifier,
-                fields = TaskType.values().toList(),
+                fields = TaskType.values(),
                 selectedField = viewModel.selectedTaskType.collectAsState().value,
                 onValueChange = { newTaskType ->
-                    viewModel.updateSelectedTaskType(newTaskType as TaskType)
+                    viewModel.updateSelectedTaskType(newTaskType)
                 })
             TypeProperties(viewModel = viewModel)
         }

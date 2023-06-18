@@ -17,9 +17,9 @@ class AlarmsHandler(
     fun createAlarmEntries(tasks: List<TaskWithAlerts>) {
         tasks.forEach { (task, alerts) ->
             alerts.forEach { alert: Alert ->
-                val shouldShowBackwardsToo =
+                val shouldShowOldAlerts =
                     (task.taskType != TaskType.ONE_TIME) && !task.isCompleted
-                if (shouldShowBackwardsToo) {
+                if (shouldShowOldAlerts) {
                     addAlarm(alert, task)
                 }
             }

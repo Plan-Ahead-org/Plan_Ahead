@@ -23,16 +23,17 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
     val uiScope = rememberCoroutineScope()
     val tasks =
         viewModel.uiState.collectAsState().value.allTasks.collectAsState(initial = listOf())
-    if (uiState.shouldShowEditTaskScreen) {
+    if (uiState.showEditTaskScreen) {
         navHostController.navigate(ScreensProperties.TaskEditScreen.route)
         viewModel.shouldShowTaskEditScreen(false)
     }
     Scaffold(floatingActionButton = {
         FloatingActionButtonAddTask(onClick = {
             viewModel.shouldShowTaskEditScreen(true)
-        })
-
-    }) { padding ->
+        }
+        )
+    }
+    ) { padding ->
         LazyColumn(modifier = Modifier.padding(padding)) {
             tasks.value.forEach { (task, alerts) ->
                 item {

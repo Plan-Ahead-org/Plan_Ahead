@@ -39,9 +39,9 @@ fun NotificationItem(
         Row {
             Text(text = "Type: ")
             SegmentedRadioButton(
-                fields = AlertType.values().toList(),
+                fields = AlertType.values(),
                 selectedField = type,
-                onValueChange = { onTypeChange(it as AlertType) })
+                onValueChange = { onTypeChange(it) })
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -93,7 +93,7 @@ private fun IntervalUnitSetter(
         selectedField = intervalUnit,
         onValueChange = {
             onUnitChange(
-                it as ChronoUnit
+                it
             )
         })
 }
@@ -106,16 +106,16 @@ private fun IntervalValueSetter(
     ExpandableList(
         fields = listOf(1, 2, 5, 10, 15),
         selectedField = intervalValue,
-        onValueChange = { onIntervalValueChange(it as Int) },
+        onValueChange = { onIntervalValueChange(it) },
         customEntryContent = { onValueChange, shouldExpand ->
-            CustomIntervalItem(shouldExpand, onValueChange, intervalValue)
+            CustomIntervalItem(shouldExpand, onValueChange = { onValueChange(it) }, intervalValue)
         })
 }
 
 @Composable
 private fun CustomIntervalItem(
     shouldExpand: MutableState<Boolean>,
-    onValueChange: (Any) -> Unit,
+    onValueChange: (Int) -> Unit,
     intervalValue: Int
 ) {
     val shouldShowDialog = remember {

@@ -3,8 +3,8 @@ package com.palone.planahead.screens.taskEdit.data
 import com.palone.planahead.data.database.alert.properties.AlertType
 import java.time.temporal.ChronoUnit
 
-data class AlertFieldProperty(
+data class AlertProperty(
     val type: AlertType = AlertType.NOTIFICATION,
-    val valueToShowAlertBeforeTaskEvent: Int = 1,
-    val unitToShowAlertBeforeTaskEvent: ChronoUnit = ChronoUnit.HOURS
+    val offsetValue: Int = 1,
+    val offsetUnit: ChronoUnit = ChronoUnit.HOURS
 )

@@ -23,25 +23,30 @@ fun DateAndTimeDialog(onFinish: (LocalDateTime) -> Unit) {
     val clockDialogState = rememberUseCaseState(visible = false,
         onCloseRequest = {
             onFinish(LocalDateTime.of(selectedDate.value, selectedTime.value))
-        })
+        }
+    )
     val calendarDialogState = rememberUseCaseState(visible = true,
         onFinishedRequest = {
             clockDialogState.show()
-        }, onDismissRequest = {
+        },
+        onDismissRequest = {
             onFinish(LocalDateTime.of(selectedDate.value, selectedTime.value))
-        })
+        }
+    )
 
     CalendarDialog(
         state = calendarDialogState,
         selection = CalendarSelection.Date {
             calendarDialogState.finish()
             selectedDate.value = it
-        })
+        }
+    )
     ClockDialog(
         state = clockDialogState,
         selection = ClockSelection.HoursMinutes { hours, minutes ->
             selectedTime.value = LocalTime.of(hours, minutes)
             clockDialogState.finish()
             onFinish(LocalDateTime.of(selectedDate.value, selectedTime.value))
-        })
+        }
+    )
 }

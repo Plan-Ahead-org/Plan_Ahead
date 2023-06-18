@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.palone.planahead.screens.taskEdit.data.TaskRepeatMode
+import com.palone.planahead.screens.taskEdit.data.TaskRepeatPeriod
 import com.palone.planahead.screens.taskEdit.ui.segmentedButton.SegmentedRadioButton
 import java.time.DayOfWeek
 import java.time.LocalTime
@@ -19,10 +19,10 @@ import java.time.LocalTime
 @Composable
 fun CronProperties(
     modifier: Modifier = Modifier,
-    selectedTaskRepeatMode: TaskRepeatMode,
+    selectedTaskRepeatPeriod: TaskRepeatPeriod,
     selectedDaysOfWeek: List<DayOfWeek>,
     selectedTime: LocalTime,
-    onModeChange: (mode: TaskRepeatMode) -> Unit,
+    onModeChange: (mode: TaskRepeatPeriod) -> Unit,
     onDaysOfWeekChange: (days: List<DayOfWeek>) -> Unit,
     onTimeChange: (LocalTime) -> Unit,
 ) {
@@ -30,17 +30,17 @@ fun CronProperties(
         Row {
             Text(text = "Repeat:")
             SegmentedRadioButton(
-                fields = TaskRepeatMode.values().toList(),
-                selectedField = selectedTaskRepeatMode,
-                onValueChange = { onModeChange(it as TaskRepeatMode) })
+                fields = TaskRepeatPeriod.values(),
+                selectedField = selectedTaskRepeatPeriod,
+                onValueChange = { onModeChange(it) })
         }
-        when (selectedTaskRepeatMode) {
-            TaskRepeatMode.DAILY -> {}
-            TaskRepeatMode.WEEKLY -> {
+        when (selectedTaskRepeatPeriod) {
+            TaskRepeatPeriod.DAILY -> {}
+            TaskRepeatPeriod.WEEKLY -> {
                 WeekDaysList(selectedDays = selectedDaysOfWeek, onValueChange = onDaysOfWeekChange)
             }
 
-            TaskRepeatMode.MONTHLY -> {} // TODO
+            TaskRepeatPeriod.MONTHLY -> {} // TODO
         }
         RepeatTimeSelector(selectedTime = selectedTime, onTimeChange = onTimeChange)
     }

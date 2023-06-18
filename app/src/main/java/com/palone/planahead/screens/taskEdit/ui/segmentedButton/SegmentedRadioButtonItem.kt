@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SegmentedRadioButtonItem(
+fun <T : Enum<T>> SegmentedRadioButtonItem(
     modifier: Modifier = Modifier,
-    label: Enum<*>,
+    label: T,
     isChecked: Boolean,
     roundedCornerEnd: Dp,
     roundedCornerStart: Dp,
-    onValueChange: (Enum<*>) -> Unit
+    onValueChange: (T) -> Unit
 ) {
     val uncheckedButtonDefaultColor =
         ButtonDefaults.buttonColors(containerColor = Color.LightGray)
@@ -35,12 +35,13 @@ fun SegmentedRadioButtonItem(
             bottomStart = roundedCornerStart,
             bottomEnd = roundedCornerEnd
         ), onClick = { onValueChange(label) }) {
-        if (isChecked)
+        if (isChecked) {
             Icon(
                 imageVector = Icons.Default.Done,
                 contentDescription = "checked",
                 modifier = Modifier
             )
+        }
         Text(text = label.name, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 11.sp)
     }
 }

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 data class HomeScreenUIState(
     var isLoading: Boolean = false,
-    var shouldShowEditTaskScreen: Boolean = false,
+    var showEditTaskScreen: Boolean = false,
     val mockTaskProperties: MockTaskProperties = MockTaskProperties(),
     val allTasks: Flow<List<TaskWithAlerts>>
 )

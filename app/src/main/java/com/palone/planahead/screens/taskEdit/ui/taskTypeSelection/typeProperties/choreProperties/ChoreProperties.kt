@@ -41,7 +41,8 @@ fun ChoreProperties(
                         selectedIntervalValue,
                         selectedIntervalUnit
                     )
-                })
+                }
+            )
             Spacer(modifier = Modifier.width(5.dp))
             IntervalUnitSetter(
                 selectedIntervalUnit,
@@ -50,7 +51,8 @@ fun ChoreProperties(
                         selectedIntervalValue,
                         selectedIntervalUnit
                     )
-                })
+                }
+            )
         }
     }
 
@@ -65,7 +67,7 @@ private fun IntervalValueSetter(
     ExpandableList(
         fields = listOf(1, 2, 5, 10, 15),
         selectedField = selectedIntervalValue,
-        onValueChange = { onIntervalValueChange(it as Int) })
+        onValueChange = { onIntervalValueChange(it) })
 }
 
 @Composable
@@ -83,7 +85,8 @@ private fun IntervalUnitSetter(
         selectedField = selectedIntervalUnit,
         onValueChange = {
             onIntervalUnitChange(
-                it as ChronoUnit
+                it
             )
-        })
+        }
+    )
 }

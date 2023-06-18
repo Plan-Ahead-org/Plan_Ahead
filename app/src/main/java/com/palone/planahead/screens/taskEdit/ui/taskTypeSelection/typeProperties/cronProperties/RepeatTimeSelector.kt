@@ -26,7 +26,8 @@ fun RepeatTimeSelector(
             onTimeChange(
                 LocalTime.of(hours, minutes)
             )
-        })
+        }
+        )
     }
 
 }

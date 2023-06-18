@@ -11,12 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ExpandableList(
+fun <T> ExpandableList(
     modifier: Modifier = Modifier,
-    fields: List<Any>,
-    selectedField: Any,
-    onValueChange: (Any) -> Unit,
-    customEntryContent: @Composable() (ColumnScope.(onValueChange: (Any) -> Unit, MutableState<Boolean>) -> Unit) = { _, _ -> }
+    fields: List<T>,
+    selectedField: T,
+    onValueChange: (T) -> Unit,
+    customEntryContent: @Composable() (ColumnScope.(onValueChange: (T) -> Unit, MutableState<Boolean>) -> Unit) = { _, _ -> }
 ) {
     val shouldExpand = remember {
         mutableStateOf(false)
@@ -27,7 +27,7 @@ fun ExpandableList(
             ExpandableListItem(
                 modifier = Modifier.padding(10.dp),
                 item = selectedField,
-                onClick = { _ ->
+                onClick = {
                     shouldExpand.value = true
                 }, suffix = "▼"
             )
@@ -39,7 +39,8 @@ fun ExpandableList(
                     onClick = { item ->
                         onValueChange(item)
                         shouldExpand.value = false
-                    })
+                    }
+                )
             }
             customEntryContent(onValueChange, shouldExpand)
         }

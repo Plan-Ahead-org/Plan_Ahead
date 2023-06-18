@@ -10,6 +10,7 @@ import com.palone.planahead.data.database.alert.properties.AlertType
 import com.palone.planahead.data.database.task.Task
 import com.palone.planahead.data.database.task.properties.TaskType
 import com.palone.planahead.screens.home.data.HomeScreenUIState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,8 +19,10 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
-class HomeScreenViewModel(
+@HiltViewModel
+class HomeScreenViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val alertRepository: AlertRepository
 ) : ViewModel() {
@@ -154,7 +157,7 @@ class HomeScreenViewModel(
     }
 
     fun shouldShowTaskEditScreen(value: Boolean) {
-        _uiState.update { _uiState.value.copy(shouldShowEditTaskScreen = value) }
+        _uiState.update { _uiState.value.copy(showEditTaskScreen = value) }
     }
 
     init {}

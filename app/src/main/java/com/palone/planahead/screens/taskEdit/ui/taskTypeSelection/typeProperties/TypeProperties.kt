@@ -27,7 +27,8 @@ fun TypeProperties(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) 
         when (viewModel.selectedTaskType.collectAsState().value) {
             TaskType.ONE_TIME -> OneTimeProperties(
                 dateAndTime = oneTimeProperties.date,
-                onChooseDateAndTimeEvent = { shouldShowDateAndTimeDialog.value = true }) // TODO
+                onChooseDateAndTimeEvent = { shouldShowDateAndTimeDialog.value = true }
+            ) // TODO
 
             TaskType.CHORE ->
                 ChoreProperties(
@@ -43,14 +44,15 @@ fun TypeProperties(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) 
 
             TaskType.CRON -> {
                 CronProperties(
-                    selectedTaskRepeatMode = cronProperties.repeatMode,
+                    selectedTaskRepeatPeriod = cronProperties.repeatMode,
                     onModeChange = { newMode -> viewModel.updateTaskRepeatMode(newMode) },
                     selectedDaysOfWeek = cronProperties.daysOfWeek,
                     onDaysOfWeekChange = { newDays ->
                         viewModel.updateDaysOfWeek(newDays)
                     },
                     selectedTime = cronProperties.dayTime,
-                    onTimeChange = { newTime -> viewModel.updateRepeatTime(newTime) })
+                    onTimeChange = { newTime -> viewModel.updateRepeatTime(newTime) }
+                )
             }
 
         }
@@ -59,6 +61,7 @@ fun TypeProperties(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) 
         DateAndTimeDialog(onFinish = {
             viewModel.updateDateAndTime(it)
             shouldShowDateAndTimeDialog.value = false
-        })
+        }
+        )
 
 }

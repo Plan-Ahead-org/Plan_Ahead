@@ -6,10 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun ExpandableListItem(
+fun <T> ExpandableListItem(
     modifier: Modifier = Modifier,
-    item: Any,
-    onClick: (Any) -> Unit,
+    item: T,
+    onClick: (T) -> Unit,
     suffix: String = ""
 ) {
     Text(text = "$item  $suffix", modifier = modifier.clickable { onClick(item) })

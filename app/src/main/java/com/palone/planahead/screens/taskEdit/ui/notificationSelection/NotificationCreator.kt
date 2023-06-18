@@ -18,15 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.palone.planahead.screens.taskEdit.data.AlertFieldProperty
+import com.palone.planahead.screens.taskEdit.data.AlertProperty
 
 @Composable
 fun NotificationCreator(
     modifier: Modifier = Modifier,
-    onNotificationCreation: (AlertFieldProperty) -> Unit
+    onNotificationCreation: (AlertProperty) -> Unit
 ) {
     val notification = remember {
-        mutableStateOf(AlertFieldProperty())
+        mutableStateOf(AlertProperty())
     }
     Card(
         colors = CardDefaults.cardColors(
@@ -49,14 +49,14 @@ fun NotificationCreator(
             ) {
                 NotificationItem(modifier = Modifier.padding(10.dp),
                     type = notification.value.type,
-                    intervalValue = notification.value.valueToShowAlertBeforeTaskEvent,
-                    intervalUnit = notification.value.unitToShowAlertBeforeTaskEvent,
+                    intervalValue = notification.value.offsetValue,
+                    intervalUnit = notification.value.offsetUnit,
                     onTypeChange = { notification.value = notification.value.copy(type = it) },
                     onIntervalPropertiesChange = { value, unit ->
                         notification.value =
                             notification.value.copy(
-                                unitToShowAlertBeforeTaskEvent = unit,
-                                valueToShowAlertBeforeTaskEvent = value
+                                offsetUnit = unit,
+                                offsetValue = value
                             )
                     }
                 )
@@ -64,7 +64,7 @@ fun NotificationCreator(
             Text(text = "+ Add this notification", fontSize = 20.sp, modifier = Modifier
                 .clickable {
                     onNotificationCreation(notification.value)
-                    notification.value = AlertFieldProperty()
+                    notification.value = AlertProperty()
                 }
                 .padding(20.dp)
             )

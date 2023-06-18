@@ -9,11 +9,11 @@ import androidx.compose.ui.unit.dp
 import com.palone.planahead.data.database.task.properties.TaskType
 
 @Composable
-fun SegmentedRadioButton(
+fun <T : Enum<T>> SegmentedRadioButton(
     modifier: Modifier = Modifier,
-    fields: List<Enum<*>>,
-    selectedField: Enum<*>,
-    onValueChange: (Enum<*>) -> Unit
+    fields: Array<T>,
+    selectedField: T,
+    onValueChange: (T) -> Unit
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.Center) {
         fields.forEachIndexed { index, label ->
@@ -26,7 +26,6 @@ fun SegmentedRadioButton(
                 onValueChange = onValueChange
             )
         }
-
     }
 }
 
@@ -34,7 +33,7 @@ fun SegmentedRadioButton(
 @Composable
 fun Preview() {
     SegmentedRadioButton(
-        fields = TaskType.values().toList(),
+        fields = TaskType.values(),
         selectedField = TaskType.CRON,
         onValueChange = {})
 }
