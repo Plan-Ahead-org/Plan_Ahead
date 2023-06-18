@@ -1,4 +1,4 @@
-package com.palone.planahead.data
+package com.palone.planahead.screens.home.data
 
 import com.palone.planahead.data.database.alert.properties.AlertTrigger
 import com.palone.planahead.data.database.alert.properties.AlertType

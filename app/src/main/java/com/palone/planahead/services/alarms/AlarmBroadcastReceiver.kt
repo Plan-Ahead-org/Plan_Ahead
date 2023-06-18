@@ -5,9 +5,10 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.example.planahead.R
 import com.palone.planahead.AlarmScreenActivity
+import com.palone.planahead.R
 import com.palone.planahead.data.database.alert.Alert
 import com.palone.planahead.data.database.alert.properties.AlertType
 import com.palone.planahead.data.database.task.Task
@@ -15,8 +16,9 @@ import com.palone.planahead.data.database.task.Task
 class AlarmBroadcastReceiver : BroadcastReceiver() {
     private val channelId = "NotificationChannel"
     override fun onReceive(context: Context?, intent: Intent?) {
-        val alert = intent?.getParcelableExtra<Alert>("alert")
-        val task = intent?.getParcelableExtra<Task>("task")
+        val alert =
+            intent?.getParcelableExtra<Alert>("alert") // deprecated, but new version needs android 13, so using it is pointless
+        val task = intent?.getParcelableExtra<Task>("task") // ^^^
         setAlarms(context, alert, task)
         if (alert != null) {
             if (alert.alertTypeName == AlertType.ALARM)
@@ -60,5 +62,6 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 else singleNotification
             )
         }
+        Log.i("Received Alarm :)", alert.toString())
     }
 }

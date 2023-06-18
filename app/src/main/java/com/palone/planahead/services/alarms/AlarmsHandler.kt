@@ -1,6 +1,5 @@
 package com.palone.planahead.services.alarms
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -10,8 +9,6 @@ import com.palone.planahead.data.database.TaskWithAlerts
 import com.palone.planahead.data.database.alert.Alert
 import com.palone.planahead.data.database.task.Task
 import com.palone.planahead.data.database.task.properties.TaskType
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
 
 class AlarmsHandler(
     private val context: Context,
@@ -20,16 +17,16 @@ class AlarmsHandler(
     fun createAlarmEntries(tasks: List<TaskWithAlerts>) {
         tasks.forEach { (task, alerts) ->
             alerts.forEach { alert: Alert ->
-                val currentTimeInMilliEpoch =
-                    LocalDateTime.now().toEpochSecond(OffsetDateTime.now().offset) * 1000
-                if ((alert.eventMillisInEpoch ?: 0) > currentTimeInMilliEpoch) {
+                val isOneTimeFromThePast = (System.currentTimeMillis() > (alert.eventMillisInEpoch
+                    ?: 0) && task.taskType == TaskType.ONE_TIME)
+                if (!task.isCompleted && !isOneTimeFromThePast) {
                     addAlarm(alert, task)
                 }
             }
         }
     }
-    @SuppressLint("MissingPermission") // permissions are granted anyway
-    fun addAlarm(alert: Alert, task: Task) {
+
+    private fun addAlarm(alert: Alert, task: Task) {
         val intent = Intent(context, AlarmBroadcastReceiver::class.java)
         intent.putExtra("alert", alert)
         intent.putExtra("task", task)
@@ -45,13 +42,12 @@ class AlarmsHandler(
         ) // will leave it until I'm done with this part of code
         when (task.taskType) {
             TaskType.ONE_TIME -> setOneTimeAlarm(alarmManager, alert, pendingIntent)
-            TaskType.CHORE -> setChoreAlarm(alarmManager, alert, pendingIntent)
-            TaskType.CRON -> setCronAlarm(alarmManager, alert, pendingIntent)
+            TaskType.CHORE -> setRepeatableAlarm(alarmManager, alert, pendingIntent)
+            TaskType.CRON -> setRepeatableAlarm(alarmManager, alert, pendingIntent)
         }
     }
 }
 
-@SuppressLint("MissingPermission") // permissions are granted anyway
 fun setOneTimeAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
     alarmManager.setExactAndAllowWhileIdle(
         AlarmManager.RTC_WAKEUP,
@@ -60,17 +56,11 @@ fun setOneTimeAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: Pen
     )
 }
 
-@SuppressLint("MissingPermission") // permissions are granted anyway
-fun setChoreAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
+fun setRepeatableAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
     alarmManager.setRepeating(
         AlarmManager.RTC_WAKEUP,
         alert.eventMillisInEpoch ?: 0,
         alert.interval ?: 0,
         pendingIntent
     )
-}
-
-@SuppressLint("MissingPermission") // permissions are granted anyway
-fun setCronAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
-    // TODO impl later (do I need it?)
 }

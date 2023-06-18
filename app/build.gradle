@@ -3,10 +3,11 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
 }
 android {
 
-    namespace 'com.example.planahead'
+    namespace 'com.palone.planahead'
     compileSdk 33
 
     defaultConfig {
@@ -29,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_19
-        targetCompatibility JavaVersion.VERSION_19
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     buildTypes {
         release {
@@ -39,7 +40,7 @@ android {
         }
     }
     kotlinOptions {
-        jvmTarget = '19'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
@@ -53,8 +54,8 @@ android {
         }
     }
     java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
@@ -79,8 +80,17 @@ dependencies {
     // clock dialogs
     implementation 'com.maxkeppeler.sheets-compose-dialogs:clock:1.1.1'
 
+    //input dialogs
+    implementation 'com.maxkeppeler.sheets-compose-dialogs:input:1.1.1'
 
-    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    // ViewModel Compose
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+
+    //Dagger - Hilt
+    implementation 'com.google.dagger:hilt-android:2.46.1'
+    kapt "com.google.dagger:hilt-android-compiler:2.46.1"
+    kapt 'com.google.dagger:hilt-compiler:2.46.1'
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
 
     implementation 'androidx.core:core-ktx:1.10.1'

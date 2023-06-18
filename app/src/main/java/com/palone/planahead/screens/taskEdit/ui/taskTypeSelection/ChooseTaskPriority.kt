@@ -1,4 +1,4 @@
-package com.palone.planahead.screens.home.ui.components
+package com.palone.planahead.screens.taskEdit.ui.taskTypeSelection
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,7 +33,6 @@ fun ChooseTaskPriority(
             }
         )
     }
-
 }
 
 private fun mapRangeToPriority(value: Float): TaskPriority {
