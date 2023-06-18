@@ -40,7 +40,10 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                     TaskItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(5.dp), task = task, alerts = alerts
+                            .padding(5.dp),
+                        task = task,
+                        alerts = alerts,
+                        onDelete = { viewModel.deleteTask(it) }
                     )
                 }
             }

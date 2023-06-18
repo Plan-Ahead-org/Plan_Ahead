@@ -17,9 +17,9 @@ class AlarmsHandler(
     fun createAlarmEntries(tasks: List<TaskWithAlerts>) {
         tasks.forEach { (task, alerts) ->
             alerts.forEach { alert: Alert ->
-                val shouldShowOldAlerts =
-                    (task.taskType != TaskType.ONE_TIME) && !task.isCompleted
-                if (shouldShowOldAlerts) {
+                val isOneTimeFromThePast = (System.currentTimeMillis() > (alert.eventMillisInEpoch
+                    ?: 0) && task.taskType == TaskType.ONE_TIME)
+                if (!task.isCompleted && !isOneTimeFromThePast) {
                     addAlarm(alert, task)
                 }
             }
@@ -42,8 +42,8 @@ class AlarmsHandler(
         ) // will leave it until I'm done with this part of code
         when (task.taskType) {
             TaskType.ONE_TIME -> setOneTimeAlarm(alarmManager, alert, pendingIntent)
-            TaskType.CHORE -> setChoreAlarm(alarmManager, alert, pendingIntent)
-            TaskType.CRON -> setCronAlarm(alarmManager, alert, pendingIntent)
+            TaskType.CHORE -> setRepeatableAlarm(alarmManager, alert, pendingIntent)
+            TaskType.CRON -> setRepeatableAlarm(alarmManager, alert, pendingIntent)
         }
     }
 }
@@ -56,15 +56,11 @@ fun setOneTimeAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: Pen
     )
 }
 
-fun setChoreAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
+fun setRepeatableAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
     alarmManager.setRepeating(
         AlarmManager.RTC_WAKEUP,
         alert.eventMillisInEpoch ?: 0,
         alert.interval ?: 0,
         pendingIntent
     )
-}
-
-fun setCronAlarm(alarmManager: AlarmManager, alert: Alert, pendingIntent: PendingIntent) {
-    // TODO impl later (do I need it?)
 }

@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.palone.planahead.AlarmScreenActivity
 import com.palone.planahead.R
@@ -61,5 +62,6 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 else singleNotification
             )
         }
+        Log.i("Received Alarm :)", alert.toString())
     }
 }
