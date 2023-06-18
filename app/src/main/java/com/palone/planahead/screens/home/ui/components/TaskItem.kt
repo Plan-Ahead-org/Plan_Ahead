@@ -81,7 +81,6 @@ fun TaskItem(
                     if (formattedDate != null) {
                         Text(text = formattedDate)
                     }
-
                 }
             }
             if (shouldExpand.value) {
@@ -93,7 +92,6 @@ fun TaskItem(
         if (shouldExpand.value) {
             ExpandedItem(task = task, alerts = alerts, onDelete = onDelete)
         }
-
     }
 }
 
@@ -119,7 +117,6 @@ fun ExpandedItem(
             }
         }
     }
-
 }
 
 @Preview

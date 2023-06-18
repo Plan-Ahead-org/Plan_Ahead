@@ -44,7 +44,7 @@ fun TypeProperties(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) 
 
             TaskType.CRON -> {
                 CronProperties(
-                    selectedTaskRepeatPeriod = cronProperties.repeatMode,
+                    selectedTaskRepeatPeriod = cronProperties.repeatPeriod,
                     onModeChange = { newMode -> viewModel.updateTaskRepeatMode(newMode) },
                     selectedDaysOfWeek = cronProperties.daysOfWeek,
                     onDaysOfWeekChange = { newDays ->

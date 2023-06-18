@@ -5,7 +5,7 @@ import java.time.DayOfWeek
 import java.time.LocalTime
 
 data class CronProperties(
-    val repeatMode: TaskRepeatPeriod = TaskRepeatPeriod.WEEKLY,
+    val repeatPeriod: TaskRepeatPeriod = TaskRepeatPeriod.WEEKLY,
     val dayTime: LocalTime = LocalTime.now(),
     val daysOfWeek: List<DayOfWeek> = listOf()
 )

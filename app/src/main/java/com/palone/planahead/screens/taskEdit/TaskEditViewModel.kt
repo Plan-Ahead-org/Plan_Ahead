@@ -146,7 +146,7 @@ class TaskEditViewModel @Inject constructor(
             priority = TaskPriority.LOW
         )
         val taskId = taskRepository.upsert(task)
-        when (typeProperties.repeatMode) {
+        when (typeProperties.repeatPeriod) {
             TaskRepeatPeriod.DAILY -> addAlertsToDatabase(
                 alertProperty,
                 millisToTaskEvent,
@@ -223,7 +223,7 @@ class TaskEditViewModel @Inject constructor(
     }
 
     fun updateTaskRepeatMode(mode: TaskRepeatPeriod) {
-        _cronProperties.update { _cronProperties.value.copy(repeatMode = mode) }
+        _cronProperties.update { _cronProperties.value.copy(repeatPeriod = mode) }
     }
 
     fun updateDaysOfWeek(days: List<DayOfWeek>) {

@@ -1,4 +1,4 @@
-package com.example.compose
+package com.palone.planahead.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

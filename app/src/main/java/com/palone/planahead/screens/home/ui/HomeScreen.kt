@@ -30,8 +30,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
     Scaffold(floatingActionButton = {
         FloatingActionButtonAddTask(onClick = {
             viewModel.shouldShowTaskEditScreen(true)
-        }
-        )
+        })
     }
     ) { padding ->
         LazyColumn(modifier = Modifier.padding(padding)) {

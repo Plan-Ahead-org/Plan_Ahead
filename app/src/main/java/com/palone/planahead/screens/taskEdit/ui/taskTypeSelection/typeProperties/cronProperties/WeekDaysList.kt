@@ -62,6 +62,5 @@ fun Day(
         ) {
             Text(text = field.name[0].toString() + field.name[1].toString().lowercase())
         }
-
     }
 }
