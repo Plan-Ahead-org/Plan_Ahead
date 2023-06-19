@@ -114,6 +114,7 @@ fun ExpandedItem(
                 Text(text = "Type: ${it.alertTypeName}")
                 Text(text = "Millis In Epoch: ${it.eventMillisInEpoch}")
                 Text(text = "Interval: ${it.interval}")
+                Text(text = "isCompleted: ${task.isCompleted}")
             }
         }
     }

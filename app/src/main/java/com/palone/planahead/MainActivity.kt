@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                 val t = taskRepository.allTasksWithAlerts.collectAsState(initial = emptyList())
                 if (t.value.isNotEmpty()) {
                     LaunchedEffect(t.value) {
-                        alarmsHandler.createAlarmEntries(t.value)
+                        alarmsHandler.setAlarms(t.value)
                     }
                 }
                 Surface(

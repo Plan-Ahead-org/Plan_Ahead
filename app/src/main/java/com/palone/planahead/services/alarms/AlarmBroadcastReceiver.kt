@@ -2,12 +2,14 @@ package com.palone.planahead.services.alarms
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.palone.planahead.AlarmScreenActivity
+import com.palone.planahead.MarkAsDoneService
 import com.palone.planahead.R
 import com.palone.planahead.data.database.alert.Alert
 import com.palone.planahead.data.database.alert.properties.AlertType
@@ -44,22 +46,36 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
             context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
 
-        val singleNotification = NotificationCompat.Builder(context, channelId)
+        val markAsDoneIntent = Intent(context, MarkAsDoneService::class.java)
+        markAsDoneIntent.putExtra("task", task)
+        markAsDoneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        markAsDoneIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+
+
+        val markAsDonePendingIntent = PendingIntent.getService(
+            context,
+            alert?.alertId ?: 0,
+            markAsDoneIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(context, channelId)
             .setContentTitle(task?.description)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentText("Nie zrobiłeś jeszcze tej rzeczy!").build()
-        val persistentNotification = NotificationCompat.Builder(context, channelId)
-            .setContentTitle(task?.description)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setOngoing(true)
-            .setContentText("Nie zrobiłeś jeszcze tej rzeczy!").build()
+            .setContentText("You haven't done that yet!")
+            .addAction(R.drawable.ic_launcher_foreground, "Done", markAsDonePendingIntent)
+
+        if (alert != null) {
+            if (alert.alertTypeName == AlertType.PERSISTENT_NOTIFICATION) {
+                notification.setOngoing(true)
+            }
+        }
+
 
         if (alert != null) {
             notificationManager.notify(
                 alert.alertId!!,
-                if (alert.alertTypeName == AlertType.PERSISTENT_NOTIFICATION)
-                    persistentNotification
-                else singleNotification
+                notification.build()
             )
         }
         Log.i("Received Alarm :)", alert.toString())
