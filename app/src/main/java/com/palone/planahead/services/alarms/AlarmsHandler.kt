@@ -1,6 +1,7 @@
 package com.palone.planahead.services.alarms
 
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -29,14 +30,11 @@ class AlarmsHandler(
     }
 
     private fun disableAlarm(alert: Alert) {
-        val intent = Intent(context, AlarmBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            alert.alertId ?: 0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        alarmManager.cancel(pendingIntent)
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (alert.alertId != null) {
+            notificationManager.cancel(alert.alertId)
+        }
     }
 
     private fun setAlarm(alert: Alert, task: Task) {

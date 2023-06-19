@@ -1,10 +1,13 @@
-package com.palone.planahead
+package com.palone.planahead.services
 
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import com.palone.planahead.data.database.TaskRepository
+import com.palone.planahead.data.database.alert.Alert
 import com.palone.planahead.data.database.task.Task
 import com.palone.planahead.services.alarms.AlarmsHandler
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +35,11 @@ class MarkAsDoneService : Service() {
 
     private fun setTaskAsDone(intent: Intent) {
         val task = intent.getParcelableExtra<Task>("task")
+        val alert = intent.getParcelableExtra<Alert>("alert")
+
+        if (alert != null) {
+            disableAlarm(this, alert)
+        }
         Log.i("MarkAsDoneActivity", "called... :), $task")
         if (task != null) {
             scope.launch {
@@ -43,6 +51,14 @@ class MarkAsDoneService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    private fun disableAlarm(context: Context, alert: Alert) {
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (alert.alertId != null) {
+            notificationManager.cancel(alert.alertId)
+        }
     }
 
 

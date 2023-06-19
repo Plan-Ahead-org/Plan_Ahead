@@ -42,7 +42,7 @@
             android:theme="@style/Theme.PlanAhead"
             android:turnScreenOn="true" />
 
-        <service android:name=".MarkAsDoneService" />
+        <service android:name=".services.MarkAsDoneService" />
 
         <receiver android:name="com.palone.planahead.services.alarms.AlarmBroadcastReceiver" />
     </application>
