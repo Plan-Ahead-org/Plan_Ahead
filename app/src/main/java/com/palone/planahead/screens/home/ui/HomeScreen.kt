@@ -3,7 +3,6 @@ package com.palone.planahead.screens.home.ui
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,7 +15,6 @@ import com.palone.planahead.screens.home.HomeScreenViewModel
 import com.palone.planahead.screens.home.ui.components.FloatingActionButtonAddTask
 import com.palone.planahead.screens.home.ui.components.TaskItem
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostController) {
     val uiState = viewModel.uiState.collectAsState().value

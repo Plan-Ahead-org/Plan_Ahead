@@ -4,12 +4,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowRight
-import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,9 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.palone.planahead.data.database.alert.Alert
 import com.palone.planahead.data.database.alert.properties.AlertTrigger
 import com.palone.planahead.data.database.alert.properties.AlertType
@@ -46,41 +47,36 @@ fun TaskItem(
     val shouldExpand = remember {
         mutableStateOf(false)
     }
+    val lastNotification = alerts.sortedBy { it.interval }.last()
+    val lastNotificationDate = lastNotification.eventMillisInEpoch?.let { it1 -> Date(it1) }
+    val pattern = "yyyy-MM-dd HH:mm:ss"
+    val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+    val formattedLastNotificationDate =
+        lastNotificationDate?.let { it1 -> simpleDateFormat.format(it1) } // Is it ok doing it here?
     SideEffect {
         alerts.forEach { alert ->
             if (!alertTriggers.contains(alert.alertTriggerName)) alertTriggers.add(alert.alertTriggerName)
             if (!alertTypes.contains(alert.alertTypeName)) alertTypes.add(alert.alertTypeName)
         }
     }
-    Column {
+    Card {
         Row(
             modifier = modifier.clickable { shouldExpand.value = !shouldExpand.value },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.BrokenImage,
-                    "Image of selected icon",
-                    modifier = Modifier.size(50.dp)
-                )
-                Column {
-                    Text(text = task.description)
-                    alertTypes.forEach { alertType ->
-                        Text(text = alertType.name, fontSize = 5.sp)
+            Column(modifier = Modifier.padding(10.dp)) {
+                Text(text = task.description)
+                Row {
+                    Text(text = "Type: ${task.taskType}")
+                }
+                if (formattedLastNotificationDate != null) {
+                    if (task.taskType == TaskType.ONE_TIME) {
+                        Text(text = "Last notification at $formattedLastNotificationDate")
                     }
                 }
-            }
-            Text(text = task.taskType.name)
-            Column {
-                alerts.forEach {
-                    val date = it.eventMillisInEpoch?.let { it1 -> Date(it1) }
-                    val pattern = "yyyy-MM-dd HH:mm:ss"
-                    val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
-                    val formattedDate = date?.let { it1 -> simpleDateFormat.format(it1) }
-                    if (formattedDate != null) {
-                        Text(text = formattedDate)
-                    }
+                if (shouldExpand.value) {
+                    ExpandedItem(task = task, alerts = alerts, onDelete = onDelete)
                 }
             }
             if (shouldExpand.value) {
@@ -88,9 +84,6 @@ fun TaskItem(
             } else {
                 Icon(Icons.Default.ArrowRight, "Trailing Icon")
             }
-        }
-        if (shouldExpand.value) {
-            ExpandedItem(task = task, alerts = alerts, onDelete = onDelete)
         }
     }
 }
@@ -120,7 +113,8 @@ fun ExpandedItem(
     }
 }
 
-@Preview
+
+@Preview(device = Devices.PIXEL_2_XL)
 @Composable
 fun TaskItemPreview() {
     TaskItem(
