@@ -14,19 +14,32 @@ class AlarmsHandler(
     private val context: Context,
     private val alarmManager: AlarmManager
 ) {
-    fun createAlarmEntries(tasks: List<TaskWithAlerts>) {
+    fun setAlarms(tasks: List<TaskWithAlerts>) {
         tasks.forEach { (task, alerts) ->
             alerts.forEach { alert: Alert ->
                 val isOneTimeFromThePast = (System.currentTimeMillis() > (alert.eventMillisInEpoch
                     ?: 0) && task.taskType == TaskType.ONE_TIME)
                 if (!task.isCompleted && !isOneTimeFromThePast) {
-                    addAlarm(alert, task)
+                    setAlarm(alert, task)
+                } else if (task.isCompleted) {
+                    disableAlarm(alert)
                 }
             }
         }
     }
 
-    private fun addAlarm(alert: Alert, task: Task) {
+    private fun disableAlarm(alert: Alert) {
+        val intent = Intent(context, AlarmBroadcastReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            alert.alertId ?: 0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        alarmManager.cancel(pendingIntent)
+    }
+
+    private fun setAlarm(alert: Alert, task: Task) {
         val intent = Intent(context, AlarmBroadcastReceiver::class.java)
         intent.putExtra("alert", alert)
         intent.putExtra("task", task)
