@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismiss
@@ -66,8 +67,9 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
                         viewModel.deleteTask(currentItem.value.task)
                 }
                 SwipeToDismiss(
+                    directions = setOf(DismissDirection.EndToStart),
                     modifier = Modifier
-                        .padding(5.dp)
+                        .padding(15.dp)
                         .fillMaxWidth(),
                     state = dismissState,
                     background = {
