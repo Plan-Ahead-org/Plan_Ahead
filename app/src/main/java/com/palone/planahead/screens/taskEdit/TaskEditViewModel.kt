@@ -100,7 +100,8 @@ class TaskEditViewModel @Inject constructor(
             description = name,
             LocalDateTime.now().toString(),
             isCompleted = false,
-            priority = TaskPriority.LOW
+            priority = TaskPriority.LOW,
+            eventMillisInEpoch = dateFeaturesUseCase.getEpochMillisFromLocalDate(typeProperties.date)
         )
         val taskId = taskRepository.upsert(task)
         addAlertsToDatabase(alertProperty, millisToTaskEvent, taskId)
@@ -195,7 +196,8 @@ class TaskEditViewModel @Inject constructor(
             description = name,
             LocalDateTime.now().toString(),
             isCompleted = false,
-            priority = TaskPriority.LOW
+            priority = TaskPriority.LOW,
+            eventMillisInEpoch = dateFeaturesUseCase.getEpochMillisFromLocalDate(typeProperties.date)
         )
         val taskId = taskRepository.upsert(task)
 
