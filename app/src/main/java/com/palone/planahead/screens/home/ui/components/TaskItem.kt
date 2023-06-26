@@ -108,6 +108,7 @@ fun ExpandedItem(
                 Text(text = "Millis In Epoch: ${it.eventMillisInEpoch}")
                 Text(text = "Interval: ${it.interval}")
                 Text(text = "isCompleted: ${task.isCompleted}")
+                Text(text = "Source: ${task.source}")
             }
         }
     }

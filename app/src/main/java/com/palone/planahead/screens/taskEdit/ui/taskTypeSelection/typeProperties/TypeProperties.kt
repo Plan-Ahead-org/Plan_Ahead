@@ -34,7 +34,7 @@ fun TypeProperties(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) 
                 ChoreProperties(
                     dateAndTime = choreProperties.date,
                     selectedIntervalValue = choreProperties.intervalValue,
-                    selectedIntervalUnit = choreProperties.intervalType,
+                    selectedIntervalUnit = choreProperties.intervalUnit,
                     onChooseDateAndTimeEvent = { shouldShowDateAndTimeDialog.value = true }, // TODO
                     onIntervalPropertiesChange = { newIntervalValue: Int, newIntervalUnit: ChronoUnit ->
                         viewModel.updateIntervalValue(newIntervalValue)
@@ -61,7 +61,6 @@ fun TypeProperties(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) 
         DateAndTimeDialog(onFinish = {
             viewModel.updateDateAndTime(it)
             shouldShowDateAndTimeDialog.value = false
-        }
-        )
+        })
 
 }

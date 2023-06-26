@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.palone.planahead.AlarmScreenActivity"
+            android:name="com.palone.planahead.activities.alarm.AlarmActivity"
             android:exported="true"
             android:showWhenLocked="true"
             android:showForAllUsers="true"

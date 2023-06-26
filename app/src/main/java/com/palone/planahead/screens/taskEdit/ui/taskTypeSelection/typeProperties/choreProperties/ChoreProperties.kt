@@ -38,7 +38,7 @@ fun ChoreProperties(
                 selectedIntervalValue,
                 onIntervalValueChange = {
                     onIntervalPropertiesChange(
-                        selectedIntervalValue,
+                        it,
                         selectedIntervalUnit
                     )
                 }
@@ -49,7 +49,7 @@ fun ChoreProperties(
                 onIntervalUnitChange = {
                     onIntervalPropertiesChange(
                         selectedIntervalValue,
-                        selectedIntervalUnit
+                        it
                     )
                 }
             )

@@ -33,15 +33,17 @@ fun HomeScreen(viewModel: HomeScreenViewModel, navHostController: NavHostControl
     ) { padding ->
         LazyColumn(modifier = Modifier.padding(padding)) {
             tasks.value.forEach { (task, alerts) ->
-                item {
-                    TaskItem(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(5.dp),
-                        task = task,
-                        alerts = alerts,
-                        onDelete = { viewModel.deleteTask(it) }
-                    )
+                if (!task.isCompleted) {
+                    item {
+                        TaskItem(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(5.dp),
+                            task = task,
+                            alerts = alerts,
+                            onDelete = { viewModel.deleteTask(it) }
+                        )
+                    }
                 }
             }
         }
