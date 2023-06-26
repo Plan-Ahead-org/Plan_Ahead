@@ -8,8 +8,11 @@ import androidx.room.Room
 import com.palone.planahead.data.database.AlertRepository
 import com.palone.planahead.data.database.PlanAheadDatabase
 import com.palone.planahead.data.database.TaskRepository
+import com.palone.planahead.domain.alertEngine.AlertEngine
+import com.palone.planahead.domain.taskEngine.TaskEngine
 import com.palone.planahead.domain.useCase.DateFeaturesUseCase
 import com.palone.planahead.services.alarms.AlarmsHandler
+import com.palone.planahead.services.ringtone.RingtoneHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +22,14 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+
+    @Provides
+    @Singleton
+    fun provideRingtoneHandler(): RingtoneHandler {
+        Log.i("Injecting", "Task Engine")
+        return RingtoneHandler()
+    }
 
     @Provides
     @Singleton
@@ -31,14 +42,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun alarmManager(app: Application): AlarmManager {
+    fun provideAlarmManager(app: Application): AlarmManager {
         Log.i("Injecting", "Alarm Manager")
         return app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     }
 
     @Provides
     @Singleton
-    fun alarmsHandler(app: Application, alarmManager: AlarmManager): AlarmsHandler {
+    fun provideAlarmsHandler(app: Application, alarmManager: AlarmManager): AlarmsHandler {
         Log.i("Injecting", "Alarm Handler")
         return AlarmsHandler(app.applicationContext, alarmManager)
     }
@@ -54,4 +65,26 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAlertRepository(db: PlanAheadDatabase) = AlertRepository(db.alertDao)
+
+    @Provides
+    @Singleton
+    fun provideTaskEngine(
+        alarmsHandler: AlarmsHandler,
+        alertRepository: AlertRepository,
+        taskRepository: TaskRepository
+    ): TaskEngine {
+        Log.i("Injecting", "Task Engine")
+        return TaskEngine(taskRepository, alarmsHandler, alertRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlertEngine(
+        alarmsHandler: AlarmsHandler,
+        alertRepository: AlertRepository,
+        taskRepository: TaskRepository
+    ): AlertEngine {
+        Log.i("Injecting", "Task Engine")
+        return AlertEngine(taskRepository, alarmsHandler, alertRepository)
+    }
 }

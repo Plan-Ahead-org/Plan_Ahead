@@ -184,11 +184,27 @@ class TaskEditViewModel @Inject constructor(
         }
     }
 
-    private fun createChoreDatabaseEntry(
-        data: ChoreProperties = _choreProperties.value,
+    private suspend fun createChoreDatabaseEntry(
+        typeProperties: ChoreProperties = _choreProperties.value,
+        alertProperty: List<AlertProperty> = _alertProperties.value,
         name: String
     ) {
+        val task = Task(
+            taskId = null,
+            taskType = TaskType.CHORE,
+            description = name,
+            LocalDateTime.now().toString(),
+            isCompleted = false,
+            priority = TaskPriority.LOW
+        )
+        val taskId = taskRepository.upsert(task)
 
+        addAlertsToDatabase(
+            alertProperty,
+            dateFeaturesUseCase.getEpochMillisFromLocalDate(typeProperties.date),
+            taskId,
+            Duration.of(1, ChronoUnit.DAYS).toMillis()
+        )
     }
 
     fun insertAlertProperty(alert: AlertProperty) {
@@ -219,7 +235,7 @@ class TaskEditViewModel @Inject constructor(
     }
 
     fun updateIntervalUnit(type: ChronoUnit) {
-        _choreProperties.update { _choreProperties.value.copy(intervalType = type) }
+        _choreProperties.update { _choreProperties.value.copy(intervalUnit = type) }
     }
 
     fun updateTaskRepeatMode(mode: TaskRepeatPeriod) {

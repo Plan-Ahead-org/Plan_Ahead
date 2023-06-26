@@ -1,7 +1,6 @@
 package com.palone.planahead.services.alarms
 
 import android.app.AlarmManager
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -16,24 +15,37 @@ class AlarmsHandler(
     private val alarmManager: AlarmManager
 ) {
     fun setAlarms(tasks: List<TaskWithAlerts>) {
-        tasks.forEach { (task, alerts) ->
-            alerts.forEach { alert: Alert ->
-                val isOneTimeFromThePast = (System.currentTimeMillis() > (alert.eventMillisInEpoch
-                    ?: 0) && task.taskType == TaskType.ONE_TIME)
-                if (!task.isCompleted && !isOneTimeFromThePast) {
-                    setAlarm(alert, task)
-                } else if (task.isCompleted) {
-                    disableAlarm(alert)
+        tasks.forEach { taskWithAlerts: TaskWithAlerts ->
+            if (taskWithAlerts.task.isCompleted) {
+                disableAlarm(taskWithAlerts)
+            } else {
+                taskWithAlerts.alerts.forEach { alert: Alert ->
+                    val isOneTimeFromThePast =
+                        (System.currentTimeMillis() > (alert.eventMillisInEpoch
+                            ?: 0) && taskWithAlerts.task.taskType == TaskType.ONE_TIME)
+                    if (!isOneTimeFromThePast) {
+                        setAlarm(alert, taskWithAlerts.task)
+                    }
                 }
             }
         }
     }
 
-    private fun disableAlarm(alert: Alert) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (alert.alertId != null) {
-            notificationManager.cancel(alert.alertId)
+
+    private fun disableAlarm(taskWithAlerts: TaskWithAlerts) {
+        taskWithAlerts.alerts.forEach { alert ->
+            if (alert.alertId != null) {
+                val intent = Intent(context, AlarmBroadcastReceiver::class.java)
+                intent.putExtra("alert", alert)
+                intent.putExtra("task", taskWithAlerts.task)
+                val pendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    alert.alertId,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+                alarmManager.cancel(pendingIntent)
+            }
         }
     }
 

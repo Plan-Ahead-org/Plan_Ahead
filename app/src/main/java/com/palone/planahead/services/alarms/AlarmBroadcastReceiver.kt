@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.palone.planahead.AlarmScreenActivity
 import com.palone.planahead.R
+import com.palone.planahead.activities.alarm.AlarmActivity
 import com.palone.planahead.data.database.alert.Alert
 import com.palone.planahead.data.database.alert.properties.AlertType
 import com.palone.planahead.data.database.task.Task
@@ -29,7 +29,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         alert: Alert?,
         task: Task?
     ): PendingIntent {
-        val alarmScreenIntent = Intent(context, AlarmScreenActivity::class.java)
+        val alarmScreenIntent = Intent(context, AlarmActivity::class.java)
         alarmScreenIntent.putExtra("alert", alert)
         alarmScreenIntent.putExtra("task", task)
         alarmScreenIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
