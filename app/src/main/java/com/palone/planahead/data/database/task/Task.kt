@@ -18,5 +18,6 @@ data class Task(
     val addedDate: String,
     val isCompleted: Boolean,
     val priority: TaskPriority = TaskPriority.LOW,
-    val source: TaskSource = TaskSource.USER
+    val source: TaskSource = TaskSource.USER,
+    val eventMillisInEpoch: Long? = null
 ) : Parcelable
