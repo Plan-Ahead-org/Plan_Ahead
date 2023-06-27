@@ -1,6 +1,7 @@
 package com.palone.planahead
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -36,6 +37,7 @@ import com.palone.planahead.data.database.TaskRepository
 import com.palone.planahead.screens.home.HomeScreenViewModel
 import com.palone.planahead.screens.taskEdit.TaskEditViewModel
 import com.palone.planahead.services.alarms.AlarmsHandler
+import com.palone.planahead.services.location.LocationService
 import com.palone.planahead.ui.theme.PlanAheadTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -50,6 +52,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intent = Intent(applicationContext, LocationService::class.java).apply {
+            action = LocationService.ACTION_START
+        }
+        startService(intent)
+
         setContent {
             PlanAheadTheme {
                 val taskEditScreenViewModel = hiltViewModel<TaskEditViewModel>()
@@ -89,7 +97,7 @@ class MainActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val permissionLauncher = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.RequestPermission(),
+                contract = ActivityResultContracts.RequestMultiplePermissions(),
                 onResult = {})
 
             val color = remember { Animatable(Color.Red) }
@@ -136,12 +144,18 @@ class MainActivity : ComponentActivity() {
                 Button(
                     onClick = {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            permissionLauncher.launch(
+                                listOf(
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    Manifest.permission.POST_NOTIFICATIONS
+                                ).toTypedArray()
+                            )
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = color.value)
                 ) {
-                    Text(text = "Allow Notifications")
+                    Text(text = "Allow Notifications and Location")
                 }
                 Text(
                     text = "↑",

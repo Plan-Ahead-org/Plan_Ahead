@@ -114,18 +114,19 @@ class TaskEditViewModel @Inject constructor(
         interval: Long = 0,
     ) {
         alertProperty.forEach {
-            val alertMillisDuration =
+            val alertMillisOffset =
                 Duration.of(
                     it.offsetValue.toLong(),
                     it.offsetUnit
                 ).toMillis()
-            val millisToNotifyBeforeTaskEvent = millisToTaskEvent - alertMillisDuration
+            val millisToNotifyBeforeTaskEvent = millisToTaskEvent - alertMillisOffset
             val alert = Alert(
                 taskId = taskId.toInt(),
                 alertTypeName = it.type,
                 alertTriggerName = AlertTrigger.TIME,
                 eventMillisInEpoch = millisToNotifyBeforeTaskEvent,
-                interval = interval
+                interval = interval,
+                toTaskOffset = alertMillisOffset
             )
             alertRepository.upsert(alert)
         }
