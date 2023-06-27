@@ -202,7 +202,7 @@ fun AlertItem(
     if (task.eventMillisInEpoch != null && alert.eventMillisInEpoch != null) {
         Text(
             text = Duration.of(
-                task.eventMillisInEpoch - alert.eventMillisInEpoch,
+                alert.toTaskOffset,
                 ChronoUnit.MILLIS
             ).toMinutes().toString() + " min,"
         )

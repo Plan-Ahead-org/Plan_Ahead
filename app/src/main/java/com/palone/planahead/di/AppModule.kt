@@ -5,14 +5,22 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.room.Room
+import com.google.android.gms.location.LocationServices
 import com.palone.planahead.data.database.AlertRepository
 import com.palone.planahead.data.database.PlanAheadDatabase
 import com.palone.planahead.data.database.TaskRepository
 import com.palone.planahead.domain.alertEngine.AlertEngine
+import com.palone.planahead.domain.alertEngine.AlertEngineImpl
+import com.palone.planahead.domain.locationClient.LocationClient
+import com.palone.planahead.domain.locationClient.LocationClientImpl
 import com.palone.planahead.domain.taskEngine.TaskEngine
+import com.palone.planahead.domain.taskEngine.TaskEngineImpl
 import com.palone.planahead.domain.useCase.DateFeaturesUseCase
+import com.palone.planahead.domain.useCase.DateFeaturesUseCaseImpl
 import com.palone.planahead.services.alarms.AlarmsHandler
+import com.palone.planahead.services.alarms.AlarmsHandlerImpl
 import com.palone.planahead.services.ringtone.RingtoneHandler
+import com.palone.planahead.services.ringtone.RingtoneHandlerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +36,7 @@ object AppModule {
     @Singleton
     fun provideRingtoneHandler(): RingtoneHandler {
         Log.i("Injecting", "Task Engine")
-        return RingtoneHandler()
+        return RingtoneHandlerImpl()
     }
 
     @Provides
@@ -51,12 +59,12 @@ object AppModule {
     @Singleton
     fun provideAlarmsHandler(app: Application, alarmManager: AlarmManager): AlarmsHandler {
         Log.i("Injecting", "Alarm Handler")
-        return AlarmsHandler(app.applicationContext, alarmManager)
+        return AlarmsHandlerImpl(app.applicationContext, alarmManager)
     }
 
     @Provides
     @Singleton
-    fun provideDateFeaturesUseCase(): DateFeaturesUseCase = DateFeaturesUseCase()
+    fun provideDateFeaturesUseCase(): DateFeaturesUseCase = DateFeaturesUseCaseImpl()
 
     @Provides
     @Singleton
@@ -74,7 +82,7 @@ object AppModule {
         taskRepository: TaskRepository
     ): TaskEngine {
         Log.i("Injecting", "Task Engine")
-        return TaskEngine(taskRepository, alarmsHandler, alertRepository)
+        return TaskEngineImpl(taskRepository, alarmsHandler, alertRepository)
     }
 
     @Provides
@@ -85,6 +93,13 @@ object AppModule {
         taskRepository: TaskRepository
     ): AlertEngine {
         Log.i("Injecting", "Task Engine")
-        return AlertEngine(taskRepository, alarmsHandler, alertRepository)
+        return AlertEngineImpl(taskRepository, alarmsHandler, alertRepository)
     }
+
+    @Provides
+    @Singleton
+    fun provideLocationClient(app: Application): LocationClient = LocationClientImpl(
+        app.applicationContext,
+        LocationServices.getFusedLocationProviderClient(app.applicationContext)
+    )
 }
