@@ -10,10 +10,11 @@ import java.time.LocalDateTime
 fun OneTimeProperties(
     modifier: Modifier = Modifier,
     dateAndTime: LocalDateTime,
-    onChooseDateAndTimeEvent: () -> Unit
+    onNewDateTime: (dateTime: LocalDateTime) -> Unit
 ) {
-    DateField(modifier = modifier.fillMaxWidth(),
-        dateAndTime = dateAndTime,
-        onChooseDateAndTimeEvent = { onChooseDateAndTimeEvent() }
+    DateField(
+        modifier = modifier.fillMaxWidth(),
+        todayDateAndTime = dateAndTime,
+        onNewValue = onNewDateTime
     )
 }

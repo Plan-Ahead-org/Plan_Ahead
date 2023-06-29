@@ -54,7 +54,7 @@ fun TaskEditScreen(viewModel: TaskEditViewModel, navHostController: NavHostContr
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AddTaskDescription(
+                AddTaskDescription(modifier = Modifier.fillMaxWidth(),
                     value = taskName.value,
                     onValueChange = { taskName.value = it })
                 Spacer(modifier = Modifier.height(9.dp))

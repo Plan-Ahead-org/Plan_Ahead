@@ -22,42 +22,43 @@ fun ChoreProperties(
     dateAndTime: LocalDateTime,
     selectedIntervalValue: Int,
     selectedIntervalUnit: ChronoUnit,
-    onChooseDateAndTimeEvent: () -> Unit,
+    onNewDateTime: (dateTime: LocalDateTime) -> Unit,
     onIntervalPropertiesChange: (intervalValue: Int, intervalUnit: ChronoUnit) -> Unit
 ) {
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        DateField(modifier.fillMaxWidth(),
-            dateAndTime = dateAndTime,
-            onChooseDateAndTimeEvent = { onChooseDateAndTimeEvent() })
-        Row(
-            modifier = Modifier.padding(top = 9.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Repeat: every")
-            IntervalValueSetter(
-                selectedIntervalValue,
-                onIntervalValueChange = {
-                    onIntervalPropertiesChange(
-                        it,
-                        selectedIntervalUnit
-                    )
-                }
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            IntervalUnitSetter(
-                selectedIntervalUnit,
-                onIntervalUnitChange = {
-                    onIntervalPropertiesChange(
-                        selectedIntervalValue,
-                        it
-                    )
-                }
-            )
-        }
+        DateField(
+            modifier.fillMaxWidth(),
+            todayDateAndTime = dateAndTime,
+            onNewValue = onNewDateTime
+        )
     }
-
-
+    Row(
+        modifier = Modifier.padding(top = 9.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = "Repeat: every")
+        IntervalValueSetter(
+            selectedIntervalValue,
+            onIntervalValueChange = {
+                onIntervalPropertiesChange(
+                    it,
+                    selectedIntervalUnit
+                )
+            }
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        IntervalUnitSetter(
+            selectedIntervalUnit,
+            onIntervalUnitChange = {
+                onIntervalPropertiesChange(
+                    selectedIntervalValue,
+                    it
+                )
+            }
+        )
+    }
 }
+
 
 @Composable
 private fun IntervalValueSetter(
