@@ -66,7 +66,7 @@ fun Scroller(
         }
 
         LaunchedEffect(state.isScrollInProgress) {// new item selector
-            val middleItem = state.layoutInfo.visibleItemsInfo.size / 2
+            val middleItem = (state.layoutInfo.visibleItemsInfo.size / 2)
             if (state.layoutInfo.visibleItemsInfo.isNotEmpty()) {
                 val middleItemValue =
                     state.layoutInfo.visibleItemsInfo[middleItem].key as? Number

@@ -49,7 +49,7 @@ fun DateField(
             }
     ) {
         DateSelector(
-            modifier = Modifier.width(160.dp),
+            modifier = Modifier.width(180.dp),
             todayDateAndTime = todayDateAndTime,
             onNewValue = {
                 onNewValue(
