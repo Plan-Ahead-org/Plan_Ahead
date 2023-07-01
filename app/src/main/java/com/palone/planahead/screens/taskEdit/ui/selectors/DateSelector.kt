@@ -21,7 +21,7 @@ fun DateSelector(
     onNewValue: (dateTime: LocalDateTime) -> Unit,
 ) {
     fun fontWeight(isSelected: Boolean) = if (isSelected) FontWeight.Bold else FontWeight.Normal
-    fun fontSize(isSelected: Boolean) = if (isSelected) 25.sp else 20.sp
+    fun fontSize(isSelected: Boolean) = if (isSelected) 21.sp else 19.sp
     Scroller(
         modifier = modifier
             .height(200.dp),
