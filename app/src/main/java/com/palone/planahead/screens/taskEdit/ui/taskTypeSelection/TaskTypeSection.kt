@@ -1,6 +1,7 @@
 package com.palone.planahead.screens.taskEdit.ui.taskTypeSelection
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.palone.planahead.data.database.task.properties.TaskType
 import com.palone.planahead.screens.taskEdit.TaskEditViewModel
 import com.palone.planahead.screens.taskEdit.ui.segmentedButton.SegmentedRadioButton
@@ -29,10 +31,12 @@ fun TaskTypeSection(modifier: Modifier = Modifier, viewModel: TaskEditViewModel)
     ) {
         Column(
             modifier = modifier
-                .fillMaxWidth(0.8f)
-                .padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .padding(10.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Text(text = "Type")
+            Text(text = "Occurrence", fontSize = 30.sp)
             SegmentedRadioButton(modifier,
                 fields = TaskType.values(),
                 selectedField = viewModel.selectedTaskType.collectAsState().value,

@@ -5,14 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.palone.planahead.screens.taskEdit.ui.selectors.DateSelector
 import com.palone.planahead.screens.taskEdit.ui.selectors.TimeSelector
@@ -32,21 +28,10 @@ fun DateField(
     val selectedMinute = remember {
         mutableStateOf(0)
     }
-    val backgroundColor = MaterialTheme.colorScheme.background
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
             .fillMaxWidth()
-            .drawWithContent {
-                drawContent()
-                drawRect(
-                    brush = Brush.verticalGradient(
-                        listOf(
-                            backgroundColor, Color.Transparent, backgroundColor
-                        )
-                    )
-                )
-            }
     ) {
         DateSelector(
             modifier = Modifier.width(180.dp),
@@ -60,9 +45,7 @@ fun DateField(
 
         TimeSelector(
             modifier = Modifier.width(160.dp),
-            todayDateAndTime = todayDateAndTime,
-            selectedHour = selectedHour.value,
-            selectedMinute = selectedMinute.value,
+            selectedTime = todayDateAndTime.toLocalTime(),
             onNewValue = {
                 selectedHour.value = it.hour
                 selectedMinute.value = it.minute
@@ -72,7 +55,6 @@ fun DateField(
                 )
             },
         )
-
     }
 }
 

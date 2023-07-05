@@ -114,11 +114,7 @@ class TaskEditViewModel @Inject constructor(
         interval: Long = 0,
     ) {
         alertProperty.forEach {
-            val alertMillisOffset =
-                Duration.of(
-                    it.offsetValue.toLong(),
-                    it.offsetUnit
-                ).toMillis()
+            val alertMillisOffset = (it.offsetTime.toNanoOfDay() * 0.000001).toLong()
             val millisToNotifyBeforeTaskEvent = millisToTaskEvent - alertMillisOffset
             val alert = Alert(
                 taskId = taskId.toInt(),
@@ -214,19 +210,11 @@ class TaskEditViewModel @Inject constructor(
         _alertProperties.update { _alertProperties.value + listOf(alert) }
     }
 
-    fun deleteAlertProperty(alert: AlertProperty) {
-        _alertProperties.update { _alertProperties.value.filter { it != alert } }
-    }
 
     fun deleteAlertProperty(index: Int) {
         _alertProperties.update { _alertProperties.value.filterIndexed { i, _ -> i != index } }
     }
 
-    fun editAlertProperty(index: Int, alert: AlertProperty) {
-        val mList = _alertProperties.value.toMutableList()
-        mList[index] = alert
-        _alertProperties.update { mList }
-    }
 
 
     fun updateSelectedTaskType(type: TaskType) {

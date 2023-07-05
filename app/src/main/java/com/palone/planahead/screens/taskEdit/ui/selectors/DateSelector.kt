@@ -2,9 +2,13 @@ package com.palone.planahead.screens.taskEdit.ui.selectors
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,9 +26,21 @@ fun DateSelector(
 ) {
     fun fontWeight(isSelected: Boolean) = if (isSelected) FontWeight.Bold else FontWeight.Normal
     fun fontSize(isSelected: Boolean) = if (isSelected) 21.sp else 19.sp
+    val backgroundColor = MaterialTheme.colorScheme.background
+
     Scroller(
         modifier = modifier
-            .height(200.dp),
+            .height(200.dp)
+            .drawWithContent {
+                drawContent()
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        listOf(
+                            backgroundColor, Color.Transparent, backgroundColor
+                        )
+                    )
+                )
+            },
         items = getYearDays(todayDateAndTime.year).toTypedArray(),
         selectedItem = getEpochMillisFromLocalDateTime(
             todayDateAndTime.withHour(0).withMinute(0).withSecond(0).withNano(0)

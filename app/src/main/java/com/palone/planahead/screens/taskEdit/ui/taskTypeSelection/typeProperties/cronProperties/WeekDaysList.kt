@@ -48,7 +48,7 @@ fun Day(
         if (checked) CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer) else CardDefaults.cardColors()
     Card(
         modifier = modifier
-            .aspectRatio(1f)
+            .aspectRatio(1.5f)
             .padding(horizontal = 1.dp),
         shape = RoundedCornerShape(100.dp),
         colors = cardColor

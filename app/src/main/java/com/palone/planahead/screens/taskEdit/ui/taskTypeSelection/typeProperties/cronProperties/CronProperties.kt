@@ -1,18 +1,13 @@
 package com.palone.planahead.screens.taskEdit.ui.taskTypeSelection.typeProperties.cronProperties
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.palone.planahead.screens.taskEdit.data.TaskRepeatPeriod
-import com.palone.planahead.screens.taskEdit.ui.segmentedButton.SegmentedRadioButton
+import com.palone.planahead.screens.taskEdit.ui.expandableList.ExpandableList
 import java.time.DayOfWeek
 import java.time.LocalTime
 
@@ -26,13 +21,14 @@ fun CronProperties(
     onDaysOfWeekChange: (days: List<DayOfWeek>) -> Unit,
     onTimeChange: (LocalTime) -> Unit,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Row {
             Text(text = "Repeat:")
-            SegmentedRadioButton(
-                fields = TaskRepeatPeriod.values(),
+            ExpandableList(
+                fields = TaskRepeatPeriod.values().toList(),
                 selectedField = selectedTaskRepeatPeriod,
-                onValueChange = { onModeChange(it) })
+                onValueChange = onModeChange
+            )
         }
         when (selectedTaskRepeatPeriod) {
             TaskRepeatPeriod.DAILY -> {}
@@ -46,22 +42,3 @@ fun CronProperties(
     }
 }
 
-@Composable
-fun DisplayClock(modifier: Modifier = Modifier, time: LocalTime, onClick: () -> Unit) {
-    Row(
-        modifier = modifier.clickable { onClick() },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Card {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(3.dp)
-            ) {
-                Text(text = time.hour.toString())
-                Text(text = ":")
-                Text(text = time.minute.toString())
-            }
-        }
-    }
-}

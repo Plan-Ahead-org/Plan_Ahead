@@ -1,17 +1,16 @@
 package com.palone.planahead.screens.taskEdit.ui.segmentedButton
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
@@ -27,7 +26,7 @@ fun <T : Enum<T>> SegmentedRadioButtonItem(
         ButtonDefaults.buttonColors(containerColor = Color.LightGray)
     val checkedButtonDefaultColor = ButtonDefaults.buttonColors()
     Button(//Not yet implemented in MaterialDesign 3
-        modifier = modifier,
+        modifier = modifier.height(60.dp),
         colors = if (isChecked) checkedButtonDefaultColor else uncheckedButtonDefaultColor,
         shape = RoundedCornerShape(
             topStart = roundedCornerStart,
@@ -35,13 +34,11 @@ fun <T : Enum<T>> SegmentedRadioButtonItem(
             bottomStart = roundedCornerStart,
             bottomEnd = roundedCornerEnd
         ), onClick = { onValueChange(label) }) {
-        if (isChecked) {
-            Icon(
-                imageVector = Icons.Default.Done,
-                contentDescription = "checked",
-                modifier = Modifier
-            )
-        }
-        Text(text = label.name, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 11.sp)
+        Text(
+            text = label.name.replace("_", " "),
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            fontSize = 11.sp
+        )
     }
 }
