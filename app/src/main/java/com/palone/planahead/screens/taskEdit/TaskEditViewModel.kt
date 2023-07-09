@@ -100,7 +100,8 @@ class TaskEditViewModel @Inject constructor(
             description = name,
             LocalDateTime.now().toString(),
             isCompleted = false,
-            priority = TaskPriority.LOW
+            priority = TaskPriority.LOW,
+            eventMillisInEpoch = dateFeaturesUseCase.getEpochMillisFromLocalDate(typeProperties.date)
         )
         val taskId = taskRepository.upsert(task)
         addAlertsToDatabase(alertProperty, millisToTaskEvent, taskId)
@@ -113,18 +114,19 @@ class TaskEditViewModel @Inject constructor(
         interval: Long = 0,
     ) {
         alertProperty.forEach {
-            val alertMillisDuration =
+            val alertMillisOffset =
                 Duration.of(
                     it.offsetValue.toLong(),
                     it.offsetUnit
                 ).toMillis()
-            val millisToNotifyBeforeTaskEvent = millisToTaskEvent - alertMillisDuration
+            val millisToNotifyBeforeTaskEvent = millisToTaskEvent - alertMillisOffset
             val alert = Alert(
                 taskId = taskId.toInt(),
                 alertTypeName = it.type,
                 alertTriggerName = AlertTrigger.TIME,
                 eventMillisInEpoch = millisToNotifyBeforeTaskEvent,
-                interval = interval
+                interval = interval,
+                toTaskOffset = alertMillisOffset
             )
             alertRepository.upsert(alert)
         }
@@ -184,11 +186,28 @@ class TaskEditViewModel @Inject constructor(
         }
     }
 
-    private fun createChoreDatabaseEntry(
-        data: ChoreProperties = _choreProperties.value,
+    private suspend fun createChoreDatabaseEntry(
+        typeProperties: ChoreProperties = _choreProperties.value,
+        alertProperty: List<AlertProperty> = _alertProperties.value,
         name: String
     ) {
+        val task = Task(
+            taskId = null,
+            taskType = TaskType.CHORE,
+            description = name,
+            LocalDateTime.now().toString(),
+            isCompleted = false,
+            priority = TaskPriority.LOW,
+            eventMillisInEpoch = dateFeaturesUseCase.getEpochMillisFromLocalDate(typeProperties.date)
+        )
+        val taskId = taskRepository.upsert(task)
 
+        addAlertsToDatabase(
+            alertProperty,
+            dateFeaturesUseCase.getEpochMillisFromLocalDate(typeProperties.date),
+            taskId,
+            Duration.of(1, ChronoUnit.DAYS).toMillis()
+        )
     }
 
     fun insertAlertProperty(alert: AlertProperty) {
@@ -219,7 +238,7 @@ class TaskEditViewModel @Inject constructor(
     }
 
     fun updateIntervalUnit(type: ChronoUnit) {
-        _choreProperties.update { _choreProperties.value.copy(intervalType = type) }
+        _choreProperties.update { _choreProperties.value.copy(intervalUnit = type) }
     }
 
     fun updateTaskRepeatMode(mode: TaskRepeatPeriod) {

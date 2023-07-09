@@ -25,17 +25,18 @@ fun TypeProperties(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) 
 
     Column(modifier = modifier) {
         when (viewModel.selectedTaskType.collectAsState().value) {
-            TaskType.ONE_TIME -> OneTimeProperties(
-                dateAndTime = oneTimeProperties.date,
-                onChooseDateAndTimeEvent = { shouldShowDateAndTimeDialog.value = true }
-            ) // TODO
+            TaskType.ONE_TIME ->
+                OneTimeProperties(
+                    dateAndTime = oneTimeProperties.date,
+                    onNewDateTime = { viewModel.updateDateAndTime(it) }, // TODO
+                )
 
             TaskType.CHORE ->
                 ChoreProperties(
                     dateAndTime = choreProperties.date,
                     selectedIntervalValue = choreProperties.intervalValue,
-                    selectedIntervalUnit = choreProperties.intervalType,
-                    onChooseDateAndTimeEvent = { shouldShowDateAndTimeDialog.value = true }, // TODO
+                    selectedIntervalUnit = choreProperties.intervalUnit,
+                    onNewDateTime = { viewModel.updateDateAndTime(it) }, // TODO
                     onIntervalPropertiesChange = { newIntervalValue: Int, newIntervalUnit: ChronoUnit ->
                         viewModel.updateIntervalValue(newIntervalValue)
                         viewModel.updateIntervalUnit(newIntervalUnit)
@@ -61,7 +62,6 @@ fun TypeProperties(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) 
         DateAndTimeDialog(onFinish = {
             viewModel.updateDateAndTime(it)
             shouldShowDateAndTimeDialog.value = false
-        }
-        )
+        })
 
 }

@@ -2,9 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".App"
@@ -27,13 +38,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.palone.planahead.AlarmScreenActivity"
+            android:name="com.palone.planahead.activities.alarm.AlarmActivity"
             android:exported="true"
             android:showWhenLocked="true"
             android:showForAllUsers="true"
             android:showOnLockScreen="true"
             android:theme="@style/Theme.PlanAhead"
             android:turnScreenOn="true" />
+
+        <service android:name=".services.MarkAsDoneService" />
+        <service
+            android:name=".services.location.LocationService"
+            android:foregroundServiceType="location" />
 
         <receiver android:name="com.palone.planahead.services.alarms.AlarmBroadcastReceiver" />
     </application>
