@@ -21,8 +21,8 @@ fun <T : Enum<T>> SegmentedRadioButton(
                 modifier = Modifier.weight(1f),
                 label = label,
                 isChecked = label == selectedField,
-                roundedCornerEnd = if (index == fields.size - 1) 20.dp else 0.dp,
-                roundedCornerStart = if (index == 0) 20.dp else 0.dp,
+                roundedCornerEnd = if (index == fields.size - 1) 5.dp else 0.dp,
+                roundedCornerStart = if (index == 0) 5.dp else 0.dp,
                 onValueChange = onValueChange
             )
         }

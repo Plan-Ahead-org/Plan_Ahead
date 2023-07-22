@@ -12,6 +12,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -36,11 +37,16 @@ fun TaskEditScreen(viewModel: TaskEditViewModel, navHostController: NavHostContr
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Scaffold(floatingActionButton = {
-            FloatingActionButtonAddTask(modifier = Modifier.fillMaxWidth(0.7f)) {
-                viewModel.createDatabaseEntry(name = taskName.value)
-                viewModel.resetProperties()
-                navHostController.navigate(ScreensProperties.HomeScreen.route)
+            if (viewModel.alertProperties.collectAsState().value.isNotEmpty()) {
+                FloatingActionButtonAddTask(modifier = Modifier.fillMaxWidth(0.7f)) {
+                    viewModel.createDatabaseEntry(name = taskName.value)
+                    viewModel.resetProperties()
+                    navHostController.navigate(ScreensProperties.HomeScreen.route)
+                }
+            } else {
+                Text(text = "Please add at least one alert")
             }
+
         }, floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
             Column(
                 modifier = Modifier
@@ -49,7 +55,7 @@ fun TaskEditScreen(viewModel: TaskEditViewModel, navHostController: NavHostContr
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AddTaskDescription(
+                AddTaskDescription(modifier = Modifier.fillMaxWidth(),
                     value = taskName.value,
                     onValueChange = { taskName.value = it })
                 Spacer(modifier = Modifier.height(9.dp))
