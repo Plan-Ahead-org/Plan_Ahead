@@ -8,6 +8,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -33,4 +34,10 @@ fun DateField(
                 modifier = Modifier.clickable { onChooseDateAndTimeEvent() })
         }
     )
+}
+
+@Preview
+@Composable
+fun DateFieldPreview() {
+    DateField(dateAndTime = LocalDateTime.now(), onChooseDateAndTimeEvent = {})
 }

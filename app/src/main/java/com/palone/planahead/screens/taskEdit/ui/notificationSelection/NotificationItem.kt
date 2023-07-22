@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -18,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.palone.planahead.data.database.alert.properties.AlertType
@@ -155,4 +157,18 @@ private fun SetInputDialog(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun NotificationItemPreview() {
+    NotificationItem(
+        modifier = Modifier.padding(10.dp),
+        type = AlertType.ALARM,
+        intervalValue = 0,
+        intervalUnit = ChronoUnit.DAYS,
+        onTypeChange = { },
+        deleteContent = {},
+        onIntervalPropertiesChange = { _, _ -> }
+    )
 }

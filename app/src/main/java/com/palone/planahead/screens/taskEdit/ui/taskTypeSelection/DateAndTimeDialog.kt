@@ -4,6 +4,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.tooling.preview.Preview
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
@@ -49,4 +50,10 @@ fun DateAndTimeDialog(onFinish: (LocalDateTime) -> Unit) {
             onFinish(LocalDateTime.of(selectedDate.value, selectedTime.value))
         }
     )
+}
+
+@Preview
+@Composable
+fun DateAndTimeDialogPreview() {
+    DateAndTimeDialog(onFinish = {})
 }

@@ -35,5 +35,6 @@ fun Preview() {
     SegmentedRadioButton(
         fields = TaskType.values(),
         selectedField = TaskType.CRON,
-        onValueChange = {})
+        onValueChange = {}
+    )
 }

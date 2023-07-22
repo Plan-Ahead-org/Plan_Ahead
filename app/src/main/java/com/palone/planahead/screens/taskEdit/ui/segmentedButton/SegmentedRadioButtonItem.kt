@@ -11,8 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.palone.planahead.data.database.task.properties.TaskType
 
 @Composable
 fun <T : Enum<T>> SegmentedRadioButtonItem(
@@ -44,4 +47,16 @@ fun <T : Enum<T>> SegmentedRadioButtonItem(
         }
         Text(text = label.name, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 11.sp)
     }
+}
+
+@Preview
+@Composable
+fun SegmentedRadioButtonItemPreview() {
+    SegmentedRadioButtonItem(
+        label = TaskType.CRON,
+        isChecked = true,
+        roundedCornerEnd = 20.dp,
+        roundedCornerStart = 20.dp,
+        onValueChange = {}
+    )
 }
