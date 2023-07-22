@@ -21,7 +21,8 @@ fun AddTaskDescription(
         modifier = modifier,
         value = value,
         onValueChange = onValueChange,
-        label = { Text(text = "Name:") })
+        label = { Text(text = "Name:") }
+    )
 }
 
 @Preview
