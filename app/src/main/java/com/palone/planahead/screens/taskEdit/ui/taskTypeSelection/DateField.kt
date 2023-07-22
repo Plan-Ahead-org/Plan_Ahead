@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.palone.planahead.screens.taskEdit.ui.selectors.DateSelector
 import com.palone.planahead.screens.taskEdit.ui.selectors.TimeSelector
@@ -103,5 +104,8 @@ fun getLocalDateTimeFromEpochMillis(millis: Long): LocalDateTime {
 @Preview
 @Composable
 fun DateFieldPreview() {
-    DateField(dateAndTime = LocalDateTime.now(), onChooseDateAndTimeEvent = {})
+    DateField(
+        todayDateAndTime = LocalDateTime.now(),
+        onNewValue = {}
+    )
 }
