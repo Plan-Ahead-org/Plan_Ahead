@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import com.palone.planahead.data.ScreensProperties
 import com.palone.planahead.screens.home.ui.components.FloatingActionButtonAddTask
 import com.palone.planahead.screens.taskEdit.TaskEditViewModel
+import com.palone.planahead.screens.taskEdit.data.AlertProperty
 import com.palone.planahead.screens.taskEdit.ui.notificationSelection.NotificationCreator
 import com.palone.planahead.screens.taskEdit.ui.notificationSelection.NotificationSelection
 import com.palone.planahead.screens.taskEdit.ui.taskTypeSelection.TaskTypeSection
@@ -60,7 +61,15 @@ fun TaskEditScreen(viewModel: TaskEditViewModel, navHostController: NavHostContr
                 Spacer(modifier = Modifier.height(9.dp))
                 TaskTypeSection(viewModel = viewModel)
                 Spacer(modifier = Modifier.height(9.dp))
-                NotificationSelection(viewModel = viewModel)
+                NotificationSelection(
+                    editAlertProperty = { index: Int, alertProperty: AlertProperty ->
+                        viewModel.editAlertProperty(index, alertProperty)
+                    },
+                    deleteAlertProperty = { index ->
+                        viewModel.deleteAlertProperty(index)
+                    },
+                    notifications = viewModel.alertProperties.collectAsState().value
+                )
                 Spacer(modifier = Modifier.padding(9.dp))
                 NotificationCreator(
                     modifier = Modifier.fillMaxWidth(0.8f),

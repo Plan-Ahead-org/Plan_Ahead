@@ -16,16 +16,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.palone.planahead.screens.taskEdit.TaskEditViewModel
+import com.palone.planahead.data.database.alert.properties.AlertType
+import com.palone.planahead.screens.taskEdit.data.AlertProperty
+import java.time.temporal.ChronoUnit
 
 @Composable
-fun NotificationSelection(modifier: Modifier = Modifier, viewModel: TaskEditViewModel) {
-    val notifications = viewModel.alertProperties.collectAsState().value
+fun NotificationSelection(
+    modifier: Modifier = Modifier,
+    editAlertProperty: (Int, AlertProperty) -> Unit = { _, _ -> },
+    deleteAlertProperty: (Int) -> Unit = { },
+    notifications: List<AlertProperty> = emptyList()
+) {
     Card(
         border = BorderStroke(2.dp, color = MaterialTheme.colorScheme.onSecondary),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
@@ -44,11 +50,11 @@ fun NotificationSelection(modifier: Modifier = Modifier, viewModel: TaskEditView
                     intervalValue = item.offsetValue,
                     intervalUnit = item.offsetUnit,
                     onTypeChange = { type ->
-                        viewModel.editAlertProperty(index, notifications[index].copy(type = type))
+                        editAlertProperty(index, notifications[index].copy(type = type))
 
                     },
                     onIntervalPropertiesChange = { value, unit ->
-                        viewModel.editAlertProperty(
+                        editAlertProperty(
                             index,
                             notifications[index].copy(
                                 offsetValue = value,
@@ -60,7 +66,7 @@ fun NotificationSelection(modifier: Modifier = Modifier, viewModel: TaskEditView
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete Notification",
-                            modifier = Modifier.clickable { viewModel.deleteAlertProperty(index) }
+                            modifier = Modifier.clickable { deleteAlertProperty(index) }
                         )
                     }
                 )
@@ -74,3 +80,31 @@ fun NotificationSelection(modifier: Modifier = Modifier, viewModel: TaskEditView
         }
     }
 }
+
+@Preview(name = "Empty")
+@Composable
+fun EmptyNotificationSelectionPreview() {
+    NotificationSelection(
+        notifications = emptyList()
+    )
+}
+
+@Preview(name = "2 items")
+@Composable
+fun FullNotificationSelectionPreview() {
+    NotificationSelection(
+        notifications = listOf(
+            AlertProperty(
+                type = AlertType.ALARM,
+                offsetValue = 1,
+                offsetUnit = ChronoUnit.DAYS
+            ),
+            AlertProperty(
+                type = AlertType.PERSISTENT_NOTIFICATION,
+                offsetValue = 1,
+                offsetUnit = ChronoUnit.HOURS
+            )
+        )
+    )
+}
+
