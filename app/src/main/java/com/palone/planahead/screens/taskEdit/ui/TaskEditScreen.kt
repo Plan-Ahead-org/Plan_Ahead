@@ -1,5 +1,6 @@
 package com.palone.planahead.screens.taskEdit.ui
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,11 +15,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.palone.planahead.data.ScreensProperties
@@ -33,7 +39,15 @@ import com.palone.planahead.screens.taskEdit.ui.taskTypeSelection.TaskTypeSectio
 fun TaskEditScreen(viewModel: TaskEditViewModel, navHostController: NavHostController) {
     val addTaskScrollState = rememberScrollState()
     val taskName = remember { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
     Surface(
+        modifier = Modifier.pointerInput(Unit) {
+            detectTapGestures(onTap = {
+                focusManager.clearFocus()
+            })
+        },
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Scaffold(floatingActionButton = {
@@ -55,9 +69,13 @@ fun TaskEditScreen(viewModel: TaskEditViewModel, navHostController: NavHostContr
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AddTaskDescription(modifier = Modifier.fillMaxWidth(),
+                AddTaskDescription(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
                     value = taskName.value,
-                    onValueChange = { taskName.value = it })
+                    onValueChange = { taskName.value = it }
+                )
                 Spacer(modifier = Modifier.height(9.dp))
                 TaskTypeSection(viewModel = viewModel)
                 Spacer(modifier = Modifier.height(9.dp))
@@ -79,4 +97,7 @@ fun TaskEditScreen(viewModel: TaskEditViewModel, navHostController: NavHostContr
         }
     }
 
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
 }
