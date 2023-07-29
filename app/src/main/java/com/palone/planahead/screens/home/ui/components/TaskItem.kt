@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.NotificationImportant
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.PriorityHigh
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -112,7 +114,14 @@ private fun ItemContent(
                     alerts.forEach {
                         AlertItem(alert = it, task = task)
                     }
-                    Text(text = " | Priority: ${task.priority}")
+                    Icon(
+                        Icons.Outlined.PriorityHigh,
+                        null,
+                        modifier = Modifier
+                            .padding(10.dp, 0.dp, 0.dp, 0.dp)
+                            .offset(0.dp, 1.dp)
+                    )
+                    Text(text = "${task.priority}")
                 }
             }
         }
@@ -178,23 +187,13 @@ fun AlertItem(
     alert: Alert,
     task: Task,
 ) {
-    when (alert.alertTypeName) {
-        AlertType.ALARM -> {
-            Icon(Icons.Default.Alarm, null)
-        }
-
-        AlertType.NOTIFICATION -> {
-            Icon(Icons.Default.Notifications, null)
-        }
-
-        AlertType.PERSISTENT_NOTIFICATION -> {
-            Icon(
-                Icons.Default.NotificationImportant,
-                null
-            )
-        }
+    val icon = when (alert.alertTypeName) {
+        AlertType.ALARM -> Icons.Default.Alarm
+        AlertType.NOTIFICATION -> Icons.Default.Notifications
+        AlertType.PERSISTENT_NOTIFICATION -> Icons.Default.NotificationImportant
     }
-    Spacer(modifier = Modifier.width(5.dp))
+    Icon(icon, null, modifier = Modifier.offset(0.dp, 1.dp))
+    Spacer(modifier = Modifier.width(3.dp))
     if (task.eventMillisInEpoch != null && alert.eventMillisInEpoch != null) {
         Text(
             text = Duration.of(
@@ -203,6 +202,7 @@ fun AlertItem(
             ).toMinutes().toString() + " min"
         )
     }
+    Spacer(modifier = Modifier.width(10.dp))
 }
 
 fun getEpochMillisFromLocalDate(dateAndTime: LocalDateTime): Long {
@@ -311,6 +311,20 @@ fun TaskItemDatePreview() {
             alerts = listOf(
                 Alert(
                     alertTypeName = AlertType.ALARM,
+                    alertTriggerName = AlertTrigger.TIME,
+                    eventMillisInEpoch = Instant.now().toEpochMilli() + 100000,
+                    toTaskOffset = 500000
+                ),
+
+                Alert(
+                    alertTypeName = AlertType.NOTIFICATION,
+                    alertTriggerName = AlertTrigger.TIME,
+                    eventMillisInEpoch = Instant.now().toEpochMilli() + 100000,
+                    toTaskOffset = 500000
+                ),
+
+                Alert(
+                    alertTypeName = AlertType.PERSISTENT_NOTIFICATION,
                     alertTriggerName = AlertTrigger.TIME,
                     eventMillisInEpoch = Instant.now().toEpochMilli() + 100000,
                     toTaskOffset = 500000
