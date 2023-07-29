@@ -134,12 +134,16 @@ private fun TaskTriggerPillar(hasPassed: Boolean) {
         if (hasPassed) PlanAheadColors.colors.taskAfterDeadlineContainer else PlanAheadColors.colors.taskBeforeDeadlineContainer
     Card(
         modifier = Modifier
-            .width(25.dp)
+            .width(35.dp)
             .fillMaxHeight(),
         shape = RoundedCornerShape(0.dp),
         colors = CardDefaults.cardColors(containerColor = containerColor)
     ) {
-        Icon(Icons.Outlined.Timer, null, modifier = Modifier.padding(2.dp, 9.dp))
+        Icon(
+            Icons.Outlined.Timer, null, modifier = Modifier
+                .padding(0.dp, 7.dp)
+                .fillMaxWidth()
+        )
     }
 }
 
