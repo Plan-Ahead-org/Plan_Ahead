@@ -5,6 +5,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 
 
 private val LightColors = lightColorScheme(
@@ -72,19 +76,53 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+@Immutable
+data class ExtendedColors(
+    val taskBeforeDeadline: Color,
+    val taskBeforeDeadlineContainer: Color,
+    val taskAfterDeadline: Color,
+    val taskAfterDeadlineContainer: Color,
+    val taskDone: Color,
+    val taskDoneContainer: Color
+)
+
+val LocalExtendedColors = staticCompositionLocalOf {
+    ExtendedColors(
+        taskBeforeDeadline = Color.Unspecified,
+        taskBeforeDeadlineContainer = Color.Unspecified,
+        taskAfterDeadline = Color.Unspecified,
+        taskAfterDeadlineContainer = Color.Unspecified,
+        taskDone = Color.Unspecified,
+        taskDoneContainer = Color.Unspecified,
+    )
+}
+
 @Composable
 fun PlanAheadTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
-    val colors = if (!useDarkTheme) {
-        LightColors
-    } else {
-        DarkColors
-    }
+    val colors = if (useDarkTheme) DarkColors else LightColors
 
-    MaterialTheme(
-        colorScheme = colors,
-        content = content
+    val extendedColors = ExtendedColors(
+        taskBeforeDeadline = colors.error,
+        taskBeforeDeadlineContainer = colors.errorContainer,
+        taskAfterDeadline = colors.primary,
+        taskAfterDeadlineContainer = colors.primaryContainer,
+        taskDone = colors.secondary,
+        taskDoneContainer = colors.secondaryContainer,
     )
+
+    CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
+        MaterialTheme(
+            colorScheme = colors,
+            content = content
+        )
+    }
+}
+
+object PlanAheadColors {
+    val colors: ExtendedColors
+        @Composable
+        get() = LocalExtendedColors.current
 }
